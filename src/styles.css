@@ -183,7 +183,7 @@
 .ry-brand-overlay {
   position: absolute; inset: 0; display: flex; flex-direction: column;
   align-items: center; justify-content: center; text-align: center;
-  pointer-events: none; padding: 0 60px;
+  padding: 0 60px; text-decoration: none; z-index: 5;
 }
 .ry-brand-text {
   font-weight: 900; font-size: clamp(28px, 6vw, 56px);
@@ -301,3 +301,21 @@
 .ry-search-close {
   position: absolute; bottom: 5px; color: #fff; cursor: pointer; font-size: 14px;
 }
+
+/* Contact form */
+.ry-form { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+.ry-form label { display: flex; flex-direction: column; font-size: 13px; font-weight: 600; color: #333; gap: 4px; }
+.ry-form input,
+.ry-form textarea {
+  padding: 10px 12px; border: 1px solid var(--ry-border); border-radius: 8px;
+  font-family: inherit; font-size: 14px; outline: none; background: #fafafa;
+}
+.ry-form input:focus,
+.ry-form textarea:focus { border-color: var(--ry-accent); background: #fff; }
+.ry-submit { max-width: 220px; cursor: pointer; border: none; }
+
+/* Content typography */
+.ry-content-area h2 { font-size: 17px; margin: 18px 0 8px; color: var(--ry-text); }
+.ry-content-area ul { padding-left: 20px; }
+.ry-content-area ul li { margin: 4px 0; color: #444; font-size: 14px; line-height: 1.6; }
+.ry-content-area a { color: var(--ry-accent); }

@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { SiteLayout } from "@/components/SiteLayout";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -22,13 +22,13 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-type App = {
+type AppCard = {
   title: string;
   image: string;
   href: string;
 };
 
-const APPS: App[] = [
+const APPS: AppCard[] = [
   { title: "DiwaVIP (Yono) Apk Download : Get ₹60 Bonus Free | All Yono Game User Guide", image: "/images/146367.webp", href: "#" },
   { title: "EN 365 (Yono) Apk Download : Claim ₹51 Bonus | Best of All Yono App List", image: "/images/146221.webp", href: "#" },
   { title: "Jaiho 91 (Yono) Apk Download : Get ₹42 Signup Bonus Free | Best Of All Yono Games", image: "/images/145755.webp", href: "#" },
@@ -41,84 +41,10 @@ const APPS: App[] = [
   { title: "Good Slots App Review 2026: Get ₹82 Signup Bonus | Safe or Not? (Real Review)", image: "/images/110172.png", href: "#" },
 ];
 
-const NAV_LINKS = [
-  { label: "Home", href: "#" },
-  { label: "About Us", href: "#" },
-  { label: "Contact Us", href: "#" },
-  { label: "Disclaimer", href: "#" },
-  { label: "Privacy Policy", href: "#" },
-  { label: "Responsible Gaming", href: "#" },
-  { label: "Terms and Conditions", href: "#" },
-];
-
 function Index() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-
   return (
-    <div className="ry-root">
-      {/* Side Menu */}
-      <aside className={`ry-side-menu ${menuOpen ? "active" : ""}`}>
-        <div className="ry-close-menu" onClick={() => setMenuOpen(false)}>
-          X Close
-        </div>
-        <ul>
-          {NAV_LINKS.map((l) => (
-            <li key={l.label}>
-              <a href={l.href}>{l.label}</a>
-            </li>
-          ))}
-        </ul>
-      </aside>
-      {menuOpen && <div className="ry-menu-overlay" onClick={() => setMenuOpen(false)} />}
-
-      {/* Search Overlay */}
-      <div className={`ry-search-overlay ${searchOpen ? "active" : ""}`}>
-        <form action="/search" method="get" className="ry-search-form">
-          <input type="text" name="q" placeholder="Search game posts..." />
-          <button type="submit">GO</button>
-        </form>
-        <div className="ry-search-close" onClick={() => setSearchOpen(false)}>
-          [ Close Search ]
-        </div>
-      </div>
-
-      {/* Header banner */}
-      <header className="ry-top-banner">
-        <div className="ry-header-icons">
-          <button
-            type="button"
-            aria-label="Open menu"
-            className="ry-icon-btn ry-hamburger"
-            onClick={() => setMenuOpen(true)}
-          >
-            <span className="ry-ham-line" style={{ background: "#ff0000" }} />
-            <span className="ry-ham-line" style={{ background: "#ffea00" }} />
-            <span className="ry-ham-line" style={{ background: "#00ff00" }} />
-          </button>
-          <button
-            type="button"
-            aria-label="Open search"
-            className="ry-icon-btn ry-search-btn"
-            onClick={() => setSearchOpen(true)}
-          >
-            <span style={{ color: "#00e5ff", fontSize: 20 }}>🔍</span>
-          </button>
-        </div>
-        <div className="ry-brand-overlay">
-          <span className="ry-brand-text">RoyalYono</span>
-          <span className="ry-brand-tag">Trending Casino Games</span>
-        </div>
-        <img alt="RoyalYono Header" src="/images/145177.webp" />
-      </header>
-
-      <div className="ry-banner-divider">
-        <span className="ry-glow-line" />
-      </div>
-
+    <SiteLayout>
       <img src="/images/145203.webp" alt="Promo banner" className="ry-promo-banner" />
-
-      {/* Grid */}
       <main className="ry-container">
         <div className="ry-app-grid">
           {APPS.map((app) => (
@@ -144,20 +70,6 @@ function Index() {
           </p>
         </section>
       </main>
-
-      <footer className="ry-footer">
-        <div className="ry-footer-links">
-          <a href="#">About Us</a> | <a href="#">Privacy Policy</a> |{" "}
-          <a href="#">Disclaimer</a> | <a href="#">Contact Us</a>
-        </div>
-        <div className="ry-copy">© 2026 RoyalYono | All Rights Reserved</div>
-      </footer>
-
-      <nav className="ry-bottom-nav">
-        <a href="#" aria-label="Home">🏠</a>
-        <a href="#" aria-label="Hot" className="ry-hot">🔥</a>
-        <a href="#" aria-label="Contact">✉️</a>
-      </nav>
-    </div>
+    </SiteLayout>
   );
 }
