@@ -1,9 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { SiteLayout } from "@/components/SiteLayout";
-import { GAMES } from "@/data/games";
+import { listGames } from "@/lib/games.functions";
 import { useEffect, useState } from "react";
 
+const gamesQueryOptions = queryOptions({
+  queryKey: ["games", "all"],
+  queryFn: () => listGames(),
+});
+
 export const Route = createFileRoute("/")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(gamesQueryOptions),
   component: Index,
   head: () => ({
     meta: [
@@ -29,6 +36,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const { data: GAMES } = useSuspenseQuery(gamesQueryOptions);
   const INITIAL = 20;
   const [visible, setVisible] = useState(INITIAL);
 
@@ -61,7 +69,7 @@ function Index() {
       <main className="ry-container">
         <div className="ry-app-grid">
           {games.map((g, idx) => (
-            <article className="ry-card" key={g.href}>
+            <article className="ry-card" key={g.id}>
               <Link to="/games/$slug" params={{ slug: g.slug }} className="ry-icon-box">
                 <img
                   src={g.img}

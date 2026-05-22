@@ -1,13 +1,21 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { SiteLayout } from "@/components/SiteLayout";
-import { GAMES_BY_SLUG, GAMES } from "@/data/games";
-import { useEffect, useState } from "react";
+import { getGameBySlug } from "@/lib/games.functions";
+
+const gameQueryOptions = (slug: string) =>
+  queryOptions({
+    queryKey: ["game", slug],
+    queryFn: () => getGameBySlug({ data: { slug } }),
+  });
 
 export const Route = createFileRoute("/games/$slug")({
-  loader: ({ params }) => {
-    const game = GAMES_BY_SLUG[params.slug];
-    if (!game) throw notFound();
-    return { game };
+  loader: async ({ params, context }) => {
+    const result = await context.queryClient.ensureQueryData(
+      gameQueryOptions(params.slug),
+    );
+    if (!result) throw notFound();
+    return result;
   },
   head: ({ loaderData }) => {
     const g = loaderData?.game;
@@ -57,35 +65,11 @@ function NotFound() {
 }
 
 function GamePage() {
-  const { game } = Route.useLoaderData();
-  const [html, setHtml] = useState<string>("");
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    setHtml("");
-    fetch(`/games-content/${game.slug}.json`)
-      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
-      .then((data) => {
-        if (!cancelled) setHtml(data.html || "");
-      })
-      .catch(() => {
-        if (!cancelled) setHtml("");
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [game.slug]);
-
-  const idx = GAMES.findIndex((g) => g.slug === game.slug);
-  const related = [
-    ...GAMES.slice(Math.max(0, idx - 3), idx),
-    ...GAMES.slice(idx + 1, idx + 4),
-  ].slice(0, 6);
+  const { slug } = Route.useParams();
+  const { data } = useSuspenseQuery(gameQueryOptions(slug));
+  const game = data!.game;
+  const related = data!.related;
+  const html = game.content;
 
   return (
     <SiteLayout>
@@ -108,9 +92,7 @@ function GamePage() {
             </div>
           </header>
 
-          {loading ? (
-            <div className="ry-loader">Loading review…</div>
-          ) : html ? (
+          {html ? (
             <div
               className="ry-game-body"
               dangerouslySetInnerHTML={{ __html: html }}
