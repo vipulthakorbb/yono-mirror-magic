@@ -5,6 +5,12 @@ import { useServerFn } from "@tanstack/react-start";
 import { getAdminStatus, claimFirstAdmin } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin")({
+  head: () => ({
+    meta: [
+      { title: "Admin — RoyalYono" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: AdminLayout,
 });
 
