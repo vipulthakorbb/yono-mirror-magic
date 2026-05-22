@@ -89,6 +89,19 @@ function GamePage() {
               <p className="ry-crumbs">
                 <Link to="/">Home</Link> &nbsp;›&nbsp; <span>Game Review</span>
               </p>
+              {game.source_url ? (
+                <p style={{ marginTop: 12 }}>
+                  <a
+                    href={game.source_url}
+                    target="_blank"
+                    rel="noopener noreferrer nofollow"
+                    className="ry-dl-btn"
+                    style={{ display: "inline-block", padding: "12px 28px", fontWeight: 700 }}
+                  >
+                    DOWNLOAD APP ↗
+                  </a>
+                </p>
+              ) : null}
             </div>
           </header>
 
