@@ -5,7 +5,8 @@ export type GameFormValues = {
   title: string;
   slug?: string;
   img: string;
-  content: string;
+  content?: string;
+  source_url?: string;
 };
 
 type Props = {
@@ -18,7 +19,7 @@ export function GameForm({ initial, submitLabel, onSubmit }: Props) {
   const [title, setTitle] = useState(initial?.title ?? "");
   const [slug, setSlug] = useState(initial?.slug ?? "");
   const [img, setImg] = useState(initial?.img ?? "");
-  const [content, setContent] = useState(initial?.content ?? "");
+  const [sourceUrl, setSourceUrl] = useState(initial?.source_url ?? "");
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -57,8 +58,8 @@ export function GameForm({ initial, submitLabel, onSubmit }: Props) {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErr("");
-    if (!img) {
-      setErr("Please upload or paste an image URL.");
+    if (!img && !sourceUrl) {
+      setErr("Upload an image or paste a game link (we'll grab the image automatically).");
       return;
     }
     setSaving(true);
@@ -67,7 +68,7 @@ export function GameForm({ initial, submitLabel, onSubmit }: Props) {
         title: title.trim(),
         slug: slug.trim() || undefined,
         img,
-        content: content ?? "",
+        source_url: sourceUrl.trim() || undefined,
       });
     } catch (e) {
       setErr((e as Error).message);
@@ -151,15 +152,23 @@ export function GameForm({ initial, submitLabel, onSubmit }: Props) {
       </div>
       <div>
         <label className="mb-1 block text-sm font-semibold">
-          Content (HTML) <span className="font-normal text-gray-500">(optional)</span>
+          Game link
+          <span className="font-normal text-gray-500">
+            {" "}
+            (we'll fetch the page content automatically on save)
+          </span>
         </label>
-        <textarea
-          rows={10}
-          className="w-full rounded-md border px-3 py-2 font-mono text-xs"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder="Leave blank to auto-fill from a source URL"
+        <input
+          type="url"
+          className="w-full rounded-md border px-3 py-2 text-sm"
+          value={sourceUrl}
+          onChange={(e) => setSourceUrl(e.target.value)}
+          placeholder="https://example.com/your-game-page"
         />
+        <p className="mt-1 text-xs text-gray-500">
+          Paste the source page URL. On save, we'll re-fetch and update the game's content
+          and image.
+        </p>
       </div>
       {err && <p className="text-sm text-red-600">{err}</p>}
       <button
