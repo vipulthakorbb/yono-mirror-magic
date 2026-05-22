@@ -20,9 +20,15 @@ function AdminLayout() {
   const getStatus = useServerFn(getAdminStatus);
   const claim = useServerFn(claimFirstAdmin);
 
-  const refresh = async () => {
-    const { data } = await supabase.auth.getSession();
-    if (!data.session) {
+  const refresh = async (sessionOverride?: { session: unknown } | null) => {
+    let hasSession: boolean;
+    if (sessionOverride !== undefined) {
+      hasSession = !!sessionOverride?.session;
+    } else {
+      const { data } = await supabase.auth.getSession();
+      hasSession = !!data.session;
+    }
+    if (!hasSession) {
       setState({ status: "anon" });
       return;
     }
@@ -39,7 +45,10 @@ function AdminLayout() {
 
   useEffect(() => {
     refresh();
-    const { data: sub } = supabase.auth.onAuthStateChange(() => refresh());
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      // Defer to avoid deadlocking the supabase auth lock
+      setTimeout(() => refresh({ session }), 0);
+    });
     return () => sub.subscription.unsubscribe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
