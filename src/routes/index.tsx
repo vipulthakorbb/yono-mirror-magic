@@ -117,12 +117,16 @@ function Index() {
         )}
 
         <section className="ry-content-area">
-          <h1>RoyalYono — All Yono Games, Rummy &amp; Casino Apps ({GAMES.length}+ Apps)</h1>
+          <h1>Yono Rummy, Yono Games, Teen Patti &amp; Rummy Apps with Signup Bonus ({GAMES.length}+ Apps)</h1>
           <p>
-            Welcome to <strong>RoyalYono</strong>, your trusted hub for the latest Yono Rummy
-            apps, Jili games, Teen Patti bonus apps and casino game reviews. Claim signup
-            bonuses, read honest reviews and download the official apps from the listings
-            above.
+            Welcome to <strong>RoyalYono</strong> — the trusted hub for{" "}
+            <strong>Yono Rummy APK</strong>, <strong>Yono Games download</strong>,{" "}
+            <strong>Teen Patti Master</strong>, <strong>Teen Patti Gold</strong>,{" "}
+            <strong>Rummy Noble</strong>, <strong>Rummy Wealth</strong>,{" "}
+            <strong>Jili games</strong>, <strong>777 games</strong> and other{" "}
+            <strong>real cash earning apps</strong> with signup bonus. Claim your{" "}
+            <strong>51 Bonus Teen Patti</strong> rewards, read honest reviews and download
+            the official APKs from the listings above.
           </p>
         </section>
       </main>
