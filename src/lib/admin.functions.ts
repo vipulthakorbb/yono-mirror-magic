@@ -111,7 +111,13 @@ export const adminUpdateGame = createServerFn({ method: "POST" })
     const { userId } = context as { userId: string };
     await assertAdmin(userId);
     const { id, ...rest } = data;
-    const patch: Record<string, unknown> = {};
+    const patch: {
+      title?: string;
+      slug?: string;
+      img?: string;
+      content?: string;
+      position?: number;
+    } = {};
     if (rest.title !== undefined) patch.title = rest.title;
     if (rest.slug !== undefined) patch.slug = rest.slug;
     if (rest.img !== undefined) patch.img = rest.img;
