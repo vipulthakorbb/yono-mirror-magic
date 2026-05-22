@@ -16,7 +16,9 @@ export const Route = createFileRoute("/privacy-policy")({
         content:
           "RoyalYono privacy policy: cookies, analytics, ads and your rights.",
       },
+      { property: "og:url", content: "https://royalyono.com/privacy-policy" },
     ],
+    links: [{ rel: "canonical", href: "https://royalyono.com/privacy-policy" }],
   }),
   component: PrivacyPage,
 });

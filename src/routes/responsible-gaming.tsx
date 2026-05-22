@@ -16,7 +16,9 @@ export const Route = createFileRoute("/responsible-gaming")({
         content:
           "RoyalYono promotes safe play. Learn about responsible gaming tips and support resources.",
       },
+      { property: "og:url", content: "https://royalyono.com/responsible-gaming" },
     ],
+    links: [{ rel: "canonical", href: "https://royalyono.com/responsible-gaming" }],
   }),
   component: ResponsiblePage,
 });

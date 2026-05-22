@@ -16,7 +16,9 @@ export const Route = createFileRoute("/disclaimer")({
         content:
           "Important disclaimer about real-money games, third-party apps and editorial reviews on RoyalYono.",
       },
+      { property: "og:url", content: "https://royalyono.com/disclaimer" },
     ],
+    links: [{ rel: "canonical", href: "https://royalyono.com/disclaimer" }],
   }),
   component: DisclaimerPage,
 });
