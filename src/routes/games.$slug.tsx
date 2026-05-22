@@ -1,6 +1,7 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { GAMES_BY_SLUG, GAMES } from "@/data/games";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/games/$slug")({
   loader: ({ params }) => {
@@ -57,6 +58,29 @@ function NotFound() {
 
 function GamePage() {
   const { game } = Route.useLoaderData();
+  const [html, setHtml] = useState<string>("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setHtml("");
+    fetch(`/games-content/${game.slug}.json`)
+      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then((data) => {
+        if (!cancelled) setHtml(data.html || "");
+      })
+      .catch(() => {
+        if (!cancelled) setHtml("");
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [game.slug]);
+
   const idx = GAMES.findIndex((g) => g.slug === game.slug);
   const related = [
     ...GAMES.slice(Math.max(0, idx - 3), idx),
@@ -84,10 +108,18 @@ function GamePage() {
             </div>
           </header>
 
-          <div
-            className="ry-game-body"
-            dangerouslySetInnerHTML={{ __html: game.html }}
-          />
+          {loading ? (
+            <div className="ry-loader">Loading review…</div>
+          ) : html ? (
+            <div
+              className="ry-game-body"
+              dangerouslySetInnerHTML={{ __html: html }}
+            />
+          ) : (
+            <p className="ry-game-body">
+              Review content is being updated. Please check back soon.
+            </p>
+          )}
         </article>
 
         {related.length > 0 && (
