@@ -86,6 +86,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
+      { rel: "preconnect", href: "https://blogger.googleusercontent.com", crossOrigin: "" },
+      { rel: "dns-prefetch", href: "https://blogger.googleusercontent.com" },
     ],
   }),
   shellComponent: RootShell,
