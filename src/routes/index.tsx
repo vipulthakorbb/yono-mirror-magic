@@ -89,6 +89,7 @@ function Index() {
         width={1200}
         height={300}
         decoding="async"
+        fetchPriority="high"
       />
       <main className="ry-container">
         <div className="ry-app-grid">
