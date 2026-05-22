@@ -67,7 +67,14 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           </button>
         </div>
         <Link to="/" className="ry-brand-overlay" aria-label="RoyalYono home" />
-        <img alt="www.RoyalYono.com — Trending Casino Games" src="/images/145177.webp" />
+        <img
+          alt="www.RoyalYono.com — Trending Casino Games"
+          src="/images/145177.webp"
+          width={1500}
+          height={244}
+          fetchPriority="high"
+          decoding="async"
+        />
       </header>
 
       <div className="ry-banner-divider">
