@@ -1,0 +1,11 @@
+# RoyalYono
+
+> RoyalYono is a hub for the latest Yono Rummy apps, Jili games, Teen Patti bonus apps and honest casino game reviews. Visitors can read reviews, claim signup bonuses, and download official APKs.
+
+## Pages
+
+- [Home](/): Browse all Yono games, rummy and casino apps with reviews and download links.
+
+## Optional
+
+- [Sitemap](/sitemap.xml): Full list of indexable pages including every game review.

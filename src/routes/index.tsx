@@ -28,10 +28,28 @@ export const Route = createFileRoute("/")({
           "All Yono Rummy, Yono Games, Yono Apps, Jili Games, 51 Bonus Teen Patti and Casino Game Reviews.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://royalyono.com/" },
     ],
     links: [
+      { rel: "canonical", href: "https://royalyono.com/" },
       { rel: "preload", as: "image", href: "/images/145177.webp", fetchpriority: "high" },
       { rel: "preload", as: "image", href: "/images/145203.webp" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "RoyalYono",
+          url: "https://royalyono.com/",
+          potentialAction: {
+            "@type": "SearchAction",
+            target: "https://royalyono.com/?q={search_term_string}",
+            "query-input": "required name=search_term_string",
+          },
+        }),
+      },
     ],
   }),
 });
