@@ -15,17 +15,22 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "RoyalYono - Trending Casino Games" },
+      { title: "Yono Rummy, Yono Games & Teen Patti Bonus Apps — RoyalYono" },
       {
         name: "description",
         content:
-          "RoyalYono — All Yono Rummy, All Yono Games, All Yono Apps, All Jili Games, 51 Bonus Teen Patti, Online Earning Apps, Casino Game Reviews.",
+          "Download Yono Rummy APK, all Yono Games, Teen Patti Gold, Teen Patti Master, Rummy Noble, Jili games & real cash earning apps with signup bonus — honest reviews on RoyalYono.",
       },
-      { property: "og:title", content: "RoyalYono - Trending Casino Games" },
+      {
+        name: "keywords",
+        content:
+          "yono rummy, yono games, yono games download, yono rummy apk, yono rummy download, yono all game, yono arcade, teen patti, teen patti master, teen patti gold, teen patti star, 3 patti, rummy noble, rummy wealth, rummy nabob, rummy mars, holy rummy, all rummy apps, rummy app, jili games, 777 games, jalwa game, spin 101, bingo 101, dd1 game, real cash games, money games online, online earning apps, teen patti bonus",
+      },
+      { property: "og:title", content: "Yono Rummy, Yono Games & Teen Patti Bonus Apps — RoyalYono" },
       {
         property: "og:description",
         content:
-          "All Yono Rummy, Yono Games, Yono Apps, Jili Games, 51 Bonus Teen Patti and Casino Game Reviews.",
+          "Yono Rummy APK, all Yono Games, Teen Patti Master/Gold, Rummy Noble, Jili games & real cash earning apps with signup bonus.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://royalyono.com/" },
@@ -112,12 +117,16 @@ function Index() {
         )}
 
         <section className="ry-content-area">
-          <h1>RoyalYono — All Yono Games, Rummy &amp; Casino Apps ({GAMES.length}+ Apps)</h1>
+          <h1>Yono Rummy, Yono Games, Teen Patti &amp; Rummy Apps with Signup Bonus ({GAMES.length}+ Apps)</h1>
           <p>
-            Welcome to <strong>RoyalYono</strong>, your trusted hub for the latest Yono Rummy
-            apps, Jili games, Teen Patti bonus apps and casino game reviews. Claim signup
-            bonuses, read honest reviews and download the official apps from the listings
-            above.
+            Welcome to <strong>RoyalYono</strong> — the trusted hub for{" "}
+            <strong>Yono Rummy APK</strong>, <strong>Yono Games download</strong>,{" "}
+            <strong>Teen Patti Master</strong>, <strong>Teen Patti Gold</strong>,{" "}
+            <strong>Rummy Noble</strong>, <strong>Rummy Wealth</strong>,{" "}
+            <strong>Jili games</strong>, <strong>777 games</strong> and other{" "}
+            <strong>real cash earning apps</strong> with signup bonus. Claim your{" "}
+            <strong>51 Bonus Teen Patti</strong> rewards, read honest reviews and download
+            the official APKs from the listings above.
           </p>
         </section>
       </main>
