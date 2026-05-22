@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { SiteLayout } from "@/components/SiteLayout";
 import { listGames } from "@/lib/games.functions";
+import { cdnImg } from "@/lib/cdn";
 import { useEffect, useState } from "react";
 
 const gamesQueryOptions = queryOptions({
@@ -72,11 +73,12 @@ function Index() {
             <article className="ry-card" key={g.id}>
               <Link to="/games/$slug" params={{ slug: g.slug }} className="ry-icon-box">
                 <img
-                  src={g.img}
+                  src={cdnImg(g.img)}
                   alt={g.title}
                   width={180}
                   height={180}
                   loading={idx < 10 ? "eager" : "lazy"}
+                  fetchPriority={idx === 0 ? "high" : undefined}
                   decoding="async"
                 />
               </Link>
