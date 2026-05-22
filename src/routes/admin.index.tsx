@@ -20,6 +20,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { listGames, type GameRow } from "@/lib/games.functions";
+import { cdnImg } from "@/lib/cdn";
 import {
   adminDeleteGame,
   adminReorderGames,
@@ -178,9 +179,11 @@ function SortableCard({
         ⋮⋮
       </button>
       <img
-        src={game.img}
+        src={cdnImg(game.img)}
         alt={game.title}
         className="h-16 w-16 flex-shrink-0 rounded-full border object-cover"
+        loading="lazy"
+        decoding="async"
       />
       <div className="min-w-0 flex-1">
         <p className="line-clamp-2 text-sm font-semibold">{game.title}</p>
