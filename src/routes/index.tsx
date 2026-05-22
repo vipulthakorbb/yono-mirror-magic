@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { GAMES } from "@/data/games";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -20,19 +21,56 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:type", content: "website" },
     ],
+    links: [
+      { rel: "preload", as: "image", href: "/images/145177.webp", fetchpriority: "high" },
+      { rel: "preload", as: "image", href: "/images/145203.webp" },
+    ],
   }),
 });
 
 function Index() {
+  const INITIAL = 20;
+  const [visible, setVisible] = useState(INITIAL);
+
+  useEffect(() => {
+    if (visible >= GAMES.length) return;
+    const onScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.offsetHeight - 800
+      ) {
+        setVisible((v) => Math.min(v + 20, GAMES.length));
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [visible]);
+
+  const games = GAMES.slice(0, visible);
+
   return (
     <SiteLayout>
-      <img src="/images/145203.webp" alt="Promo banner" className="ry-promo-banner" />
+      <img
+        src="/images/145203.webp"
+        alt="Promo banner"
+        className="ry-promo-banner"
+        width={1200}
+        height={300}
+        decoding="async"
+      />
       <main className="ry-container">
         <div className="ry-app-grid">
-          {GAMES.map((g) => (
+          {games.map((g, idx) => (
             <article className="ry-card" key={g.href}>
               <a href={g.href} target="_blank" rel="noopener noreferrer" className="ry-icon-box">
-                <img src={g.img} alt={g.title} loading="lazy" />
+                <img
+                  src={g.img}
+                  alt={g.title}
+                  width={180}
+                  height={180}
+                  loading={idx < 10 ? "eager" : "lazy"}
+                  decoding="async"
+                />
               </a>
               <h2 className="ry-app-name">{g.title}</h2>
               <a href={g.href} target="_blank" rel="noopener noreferrer" className="ry-dl-btn">
@@ -41,6 +79,9 @@ function Index() {
             </article>
           ))}
         </div>
+        {visible < GAMES.length && (
+          <div className="ry-loader">Loading more games…</div>
+        )}
 
         <section className="ry-content-area">
           <h1>RoyalYono — All Yono Games, Rummy &amp; Casino Apps ({GAMES.length}+ Apps)</h1>

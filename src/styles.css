@@ -314,6 +314,8 @@
 .ry-form textarea:focus { border-color: var(--ry-accent); background: #fff; }
 .ry-submit { max-width: 220px; cursor: pointer; border: none; }
 
+.ry-loader { text-align: center; padding: 18px; color: var(--ry-accent); font-weight: 700; }
+
 /* Content typography */
 .ry-content-area h2 { font-size: 17px; margin: 18px 0 8px; color: var(--ry-text); }
 .ry-content-area ul { padding-left: 20px; }
