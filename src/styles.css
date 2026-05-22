@@ -331,6 +331,7 @@
 .ry-content-area ul { padding-left: 20px; }
 .ry-content-area ul li { margin: 4px 0; color: #444; font-size: 14px; line-height: 1.6; }
 .ry-content-area a { color: var(--ry-accent); }
+.ry-content-area a.ry-dl-btn { color: #fff; text-align: center; }
 
 /* Game detail page */
 .ry-game-page { background: #fff; padding: 18px; border-radius: 14px; box-shadow: 0 6px 20px rgba(0,0,0,.06); margin: 16px 0; }
