@@ -144,7 +144,6 @@ function AdminLayout() {
 }
 
 function LoginPanel({ onDone }: { onDone: () => void }) {
-  const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
@@ -155,14 +154,10 @@ function LoginPanel({ onDone }: { onDone: () => void }) {
     setErr("");
     setLoading(true);
     try {
-      const { error } =
-        mode === "login"
-          ? await supabase.auth.signInWithPassword({ email, password })
-          : await supabase.auth.signUp({
-              email,
-              password,
-              options: { emailRedirectTo: window.location.origin + "/admin" },
-            });
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
       if (error) throw error;
       onDone();
     } catch (e) {
@@ -174,14 +169,8 @@ function LoginPanel({ onDone }: { onDone: () => void }) {
 
   return (
     <div className="mx-auto mt-16 max-w-md rounded-xl border bg-white p-6 shadow">
-      <h1 className="mb-1 text-xl font-bold">
-        {mode === "login" ? "Admin sign in" : "Create admin account"}
-      </h1>
-      <p className="mb-4 text-sm text-gray-500">
-        {mode === "login"
-          ? "Sign in to manage games."
-          : "First account becomes the admin."}
-      </p>
+      <h1 className="mb-1 text-xl font-bold">Admin sign in</h1>
+      <p className="mb-4 text-sm text-gray-500">Sign in to manage games.</p>
       <form onSubmit={submit} className="space-y-3">
         <input
           type="email"
@@ -206,17 +195,9 @@ function LoginPanel({ onDone }: { onDone: () => void }) {
           disabled={loading}
           className="w-full rounded-md bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700 disabled:opacity-60"
         >
-          {loading ? "Please wait…" : mode === "login" ? "Sign in" : "Sign up"}
+          {loading ? "Please wait…" : "Sign in"}
         </button>
       </form>
-      <button
-        className="mt-3 w-full text-sm text-gray-600 hover:underline"
-        onClick={() => setMode(mode === "login" ? "signup" : "login")}
-      >
-        {mode === "login"
-          ? "Don't have an account? Sign up"
-          : "Already have an account? Sign in"}
-      </button>
     </div>
   );
 }
