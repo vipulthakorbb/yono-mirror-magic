@@ -82,13 +82,16 @@ export const adminCreateGame = createServerFn({ method: "POST" })
     const slug = data.slug || slugify(data.title);
     if (!slug) throw new Error("Could not derive slug from title");
 
-    // Auto-scrape content / image from source_url when provided.
+    // Admin-entered content wins. Source URL is only used as an image fallback.
     let img = data.img || "";
-    let content = data.content ?? "";
-    if (data.source_url) {
-      const scraped = await scrapeUrl(data.source_url);
-      content = scraped.content || content;
-      if (!img) img = scraped.img;
+    const content = data.content ?? "";
+    if (data.source_url && !img) {
+      try {
+        const scraped = await scrapeUrl(data.source_url);
+        img = scraped.img;
+      } catch {
+        // ignore scrape errors; admin can paste an image instead
+      }
     }
     if (!img) throw new Error("Please upload an image or provide a source link with an og:image.");
 
@@ -135,22 +138,13 @@ export const adminUpdateGame = createServerFn({ method: "POST" })
     if (rest.title !== undefined) patch.title = rest.title;
     if (rest.slug !== undefined) patch.slug = rest.slug;
     if (rest.position !== undefined) patch.position = rest.position;
-
-    // If a source_url is provided on save, always re-scrape and refresh content
-    // (and image if no manual image override is being saved).
     if (rest.source_url !== undefined) {
-      const url = rest.source_url || "";
-      patch.source_url = url || null;
-      if (url) {
-        const scraped = await scrapeUrl(url);
-        patch.content = scraped.content;
-        if (!rest.img) patch.img = scraped.img;
-      }
+      patch.source_url = rest.source_url || null;
     }
     if (rest.img) patch.img = rest.img;
-    // Only allow manual content override when explicitly passed AND no source_url
-    // refresh happened in this save.
-    if (rest.content !== undefined && patch.content === undefined) {
+    // Admin-entered description wins. Empty string means "clear it"; undefined
+    // means "leave existing content alone".
+    if (rest.content !== undefined && rest.content !== "") {
       patch.content = rest.content;
     }
 
