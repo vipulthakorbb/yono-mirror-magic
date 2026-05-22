@@ -2,6 +2,7 @@ import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { SiteLayout } from "@/components/SiteLayout";
 import { getGameBySlug } from "@/lib/games.functions";
+import { cdnImg } from "@/lib/cdn";
 
 const gameQueryOptions = (slug: string) =>
   queryOptions({
@@ -77,11 +78,12 @@ function GamePage() {
         <article className="ry-game-page">
           <header className="ry-game-header">
             <img
-              src={game.img}
+              src={cdnImg(game.img)}
               alt={game.title}
               width={180}
               height={180}
               className="ry-game-icon"
+              fetchPriority="high"
               decoding="async"
             />
             <div>
@@ -124,7 +126,7 @@ function GamePage() {
               {related.map((g) => (
                 <article className="ry-card" key={g.slug}>
                   <Link to="/games/$slug" params={{ slug: g.slug }} className="ry-icon-box">
-                    <img src={g.img} alt={g.title} width={180} height={180} loading="lazy" decoding="async" />
+                    <img src={cdnImg(g.img)} alt={g.title} width={180} height={180} loading="lazy" decoding="async" />
                   </Link>
                   <h3 className="ry-app-name">{g.title}</h3>
                   <Link to="/games/$slug" params={{ slug: g.slug }} className="ry-dl-btn">
