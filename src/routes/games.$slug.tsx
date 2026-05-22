@@ -24,6 +24,7 @@ export const Route = createFileRoute("/games/$slug")({
     const desc = g
       ? `${g.title}. Read the full review, claim the signup bonus and download the official APK on RoyalYono.`
       : "Game review on RoyalYono.";
+    const url = g ? `https://royalyono.com/games/${g.slug}` : undefined;
     return {
       meta: [
         { title },
@@ -31,9 +32,28 @@ export const Route = createFileRoute("/games/$slug")({
         { property: "og:title", content: title },
         { property: "og:description", content: desc },
         { property: "og:type", content: "article" },
+        ...(url ? [{ property: "og:url", content: url }] : []),
         ...(g?.img ? [{ property: "og:image", content: g.img }] : []),
+        ...(g?.img ? [{ name: "twitter:image", content: g.img }] : []),
       ],
-      links: g ? [{ rel: "canonical", href: `/games/${g.slug}` }] : [],
+      links: g ? [{ rel: "canonical", href: url! }] : [],
+      scripts: g
+        ? [
+            {
+              type: "application/ld+json",
+              children: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "SoftwareApplication",
+                name: g.title,
+                image: g.img,
+                description: desc,
+                applicationCategory: "GameApplication",
+                operatingSystem: "Android",
+                url,
+              }),
+            },
+          ]
+        : [],
     };
   },
   component: GamePage,
