@@ -156,3 +156,55 @@ export const adminGetGame = createServerFn({ method: "GET" })
     if (error) throw new Error(error.message);
     return row;
   });
+
+export const adminReorderGames = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) =>
+    z
+      .object({
+        order: z
+          .array(z.object({ id: z.string().uuid(), position: z.number().int().min(0).max(100000) }))
+          .min(1)
+          .max(1000),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { userId } = context as { userId: string };
+    await assertAdmin(userId);
+    // Update each row's position. Small batches keep it simple and reliable.
+    for (const { id, position } of data.order) {
+      const { error } = await supabaseAdmin
+        .from("games")
+        .update({ position })
+        .eq("id", id);
+      if (error) throw new Error(error.message);
+    }
+    return { ok: true };
+  });
+
+export const adminUpdateSlug = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) =>
+    z
+      .object({
+        id: z.string().uuid(),
+        slug: z
+          .string()
+          .trim()
+          .min(1)
+          .max(200)
+          .regex(/^[a-z0-9-]+$/, "Use lowercase letters, numbers, and hyphens only"),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { userId } = context as { userId: string };
+    await assertAdmin(userId);
+    const { error } = await supabaseAdmin
+      .from("games")
+      .update({ slug: data.slug })
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true, slug: data.slug };
+  });
