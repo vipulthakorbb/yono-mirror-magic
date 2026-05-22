@@ -77,7 +77,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:site_name", content: "RoyalYono" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "google-site-verification", content: "ch6QHJK6dN3BpaF1aCyf3UXfbVFr9EsC98d1EBwrDM0" },
+      { name: "google-site-verification", content: "Qp2cU-mAdaNzqcXxSr4jImBZcdsR5CkEhWFd3o-8zH8" },
     ],
     links: [
       {
