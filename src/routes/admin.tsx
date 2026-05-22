@@ -21,23 +21,28 @@ function AdminLayout() {
   const claim = useServerFn(claimFirstAdmin);
 
   const refresh = async () => {
+    console.log("[admin] refresh start");
     const { data } = await supabase.auth.getSession();
+    console.log("[admin] session", !!data.session);
     if (!data.session) {
       setState({ status: "anon" });
       return;
     }
     try {
       const s = await getStatus();
+      console.log("[admin] status", s);
       if (s.isAdmin) setState({ status: "ok", userId: s.userId });
       else if (!s.anyAdminExists)
         setState({ status: "no-admin", userId: s.userId });
       else setState({ status: "forbidden" });
-    } catch {
+    } catch (e) {
+      console.error("[admin] getStatus error", e);
       setState({ status: "anon" });
     }
   };
 
   useEffect(() => {
+    console.log("[admin] mount effect");
     refresh();
     const { data: sub } = supabase.auth.onAuthStateChange(() => refresh());
     return () => sub.subscription.unsubscribe();
