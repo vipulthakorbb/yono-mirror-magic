@@ -19,9 +19,10 @@ const GameInput = z.object({
     .max(200)
     .regex(/^[a-z0-9-]+$/)
     .optional(),
-  img: z.string().trim().url().max(2000),
+  img: z.string().trim().url().max(2000).optional().or(z.literal("")),
   content: z.string().max(500000).default(""),
   position: z.number().int().min(0).max(100000).optional(),
+  source_url: z.string().trim().url().max(2000).optional().or(z.literal("")),
 });
 
 async function assertAdmin(userId: string) {
@@ -80,6 +81,17 @@ export const adminCreateGame = createServerFn({ method: "POST" })
     await assertAdmin(userId);
     const slug = data.slug || slugify(data.title);
     if (!slug) throw new Error("Could not derive slug from title");
+
+    // Auto-scrape content / image from source_url when provided.
+    let img = data.img || "";
+    let content = data.content ?? "";
+    if (data.source_url) {
+      const scraped = await scrapeUrl(data.source_url);
+      content = scraped.content || content;
+      if (!img) img = scraped.img;
+    }
+    if (!img) throw new Error("Please upload an image or provide a source link with an og:image.");
+
     const { count } = await supabaseAdmin
       .from("games")
       .select("id", { count: "exact", head: true });
@@ -89,8 +101,9 @@ export const adminCreateGame = createServerFn({ method: "POST" })
       .insert({
         title: data.title,
         slug,
-        img: data.img,
-        content: data.content ?? "",
+        img,
+        content,
+        source_url: data.source_url || null,
         position,
       })
       .select("id, slug")
@@ -117,12 +130,30 @@ export const adminUpdateGame = createServerFn({ method: "POST" })
       img?: string;
       content?: string;
       position?: number;
+      source_url?: string | null;
     } = {};
     if (rest.title !== undefined) patch.title = rest.title;
     if (rest.slug !== undefined) patch.slug = rest.slug;
-    if (rest.img !== undefined) patch.img = rest.img;
-    if (rest.content !== undefined) patch.content = rest.content;
     if (rest.position !== undefined) patch.position = rest.position;
+
+    // If a source_url is provided on save, always re-scrape and refresh content
+    // (and image if no manual image override is being saved).
+    if (rest.source_url !== undefined) {
+      const url = rest.source_url || "";
+      patch.source_url = url || null;
+      if (url) {
+        const scraped = await scrapeUrl(url);
+        patch.content = scraped.content;
+        if (!rest.img) patch.img = scraped.img;
+      }
+    }
+    if (rest.img) patch.img = rest.img;
+    // Only allow manual content override when explicitly passed AND no source_url
+    // refresh happened in this save.
+    if (rest.content !== undefined && patch.content === undefined) {
+      patch.content = rest.content;
+    }
+
     const { error } = await supabaseAdmin
       .from("games")
       .update(patch)
@@ -150,7 +181,7 @@ export const adminGetGame = createServerFn({ method: "GET" })
     await assertAdmin(userId);
     const { data: row, error } = await supabaseAdmin
       .from("games")
-      .select("id, slug, title, img, content, position")
+      .select("id, slug, title, img, content, position, source_url")
       .eq("id", data.id)
       .single();
     if (error) throw new Error(error.message);
@@ -249,6 +280,33 @@ function extractMain(html: string): string {
   if (main) return main;
   const body = h.match(/<body[\s\S]*?<\/body>/i)?.[0];
   return body ?? h;
+}
+
+async function scrapeUrl(url: string): Promise<{ title: string; img: string; content: string }> {
+  const res = await fetch(url, {
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (compatible; YonoBot/1.0; +https://yono-mirror-magic.lovable.app)",
+      Accept: "text/html,application/xhtml+xml",
+    },
+    redirect: "follow",
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch URL (${res.status} ${res.statusText})`);
+  }
+  const html = await res.text();
+  const ogTitle =
+    pick(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i, html) ||
+    pick(/<meta[^>]+name=["']twitter:title["'][^>]+content=["']([^"']+)["']/i, html);
+  const titleTag = pick(/<title[^>]*>([^<]+)<\/title>/i, html);
+  const title = decodeEntities(ogTitle || titleTag || "").slice(0, 300);
+  const ogImg =
+    pick(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i, html) ||
+    pick(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i, html);
+  let img = ogImg || pick(/<img[^>]+src=["']([^"']+)["']/i, html) || "";
+  if (img) img = absolutize(img, url);
+  const content = extractMain(html);
+  return { title, img, content };
 }
 
 export const adminScrapeGameUrl = createServerFn({ method: "POST" })
