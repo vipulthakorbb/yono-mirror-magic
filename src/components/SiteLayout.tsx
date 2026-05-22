@@ -67,7 +67,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           </button>
         </div>
         <Link to="/" className="ry-brand-overlay">
-          <span className="ry-brand-text">RoyalYono</span>
+          <span className="ry-brand-text">www.RoyalYono.com</span>
           <span className="ry-brand-tag">Trending Casino Games</span>
         </Link>
         <img alt="RoyalYono Header" src="/images/145177.webp" />
