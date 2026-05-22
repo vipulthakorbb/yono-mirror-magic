@@ -15,7 +15,9 @@ export const Route = createFileRoute("/terms")({
         property: "og:description",
         content: "Please read these terms carefully before using RoyalYono.",
       },
+      { property: "og:url", content: "https://royalyono.com/terms" },
     ],
+    links: [{ rel: "canonical", href: "https://royalyono.com/terms" }],
   }),
   component: TermsPage,
 });
