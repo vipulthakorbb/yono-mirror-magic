@@ -72,18 +72,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Royal Yono Replicant creates a mirrored website, replicating content and functionality from a specified source." },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Royal Yono Replicant creates a mirrored website, replicating content and functionality from a specified source." },
+      { title: "RoyalYono — All Yono Games, Rummy & Casino Apps" },
+      { name: "description", content: "Your hub for the latest Yono Rummy apps, Jili games, Teen Patti bonuses and honest casino game reviews — claim signup bonuses and download official APKs." },
+      { property: "og:site_name", content: "RoyalYono" },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Lovable App" },
-      { name: "twitter:description", content: "Royal Yono Replicant creates a mirrored website, replicating content and functionality from a specified source." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2317435c-6ac2-4de4-aeff-24eefcf779db/id-preview-3603d21a--3dbc1896-41f6-4cc6-b921-30e256d9dd6d.lovable.app-1779425178470.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2317435c-6ac2-4de4-aeff-24eefcf779db/id-preview-3603d21a--3dbc1896-41f6-4cc6-b921-30e256d9dd6d.lovable.app-1779425178470.png" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       {
@@ -92,6 +85,26 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "preconnect", href: "https://blogger.googleusercontent.com", crossOrigin: "" },
       { rel: "dns-prefetch", href: "https://blogger.googleusercontent.com" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "RoyalYono",
+          url: "https://royalyono.com",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "RoyalYono",
+          url: "https://royalyono.com",
+        }),
+      },
     ],
   }),
   shellComponent: RootShell,
