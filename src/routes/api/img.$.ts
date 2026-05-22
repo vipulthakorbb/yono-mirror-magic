@@ -23,10 +23,11 @@ export const Route = createFileRoute("/api/img/$")({
         if (!base) return new Response("Misconfigured", { status: 500 });
 
         const upstream = `${base.replace(/\/$/, "")}/storage/v1/object/public/${path}`;
+        // `cf` is a Cloudflare Workers extension to fetch — types don't know
+        // about it, so we cast through unknown.
         const res = await fetch(upstream, {
           cf: { cacheTtl: 31536000, cacheEverything: true },
-          // @ts-expect-error cf is Cloudflare-specific and not in fetch types
-        });
+        } as unknown as RequestInit);
         if (!res.ok) {
           return new Response("Upstream error", { status: res.status });
         }
