@@ -67,7 +67,7 @@ export function GameForm({ initial, submitLabel, onSubmit }: Props) {
         title: title.trim(),
         slug: slug.trim() || undefined,
         img,
-        content,
+        content: content ?? "",
       });
     } catch (e) {
       setErr((e as Error).message);
@@ -151,14 +151,14 @@ export function GameForm({ initial, submitLabel, onSubmit }: Props) {
       </div>
       <div>
         <label className="mb-1 block text-sm font-semibold">
-          Content (HTML)
+          Content (HTML) <span className="font-normal text-gray-500">(optional)</span>
         </label>
         <textarea
           rows={10}
           className="w-full rounded-md border px-3 py-2 font-mono text-xs"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          placeholder="<p>Full review HTML…</p>"
+          placeholder="Leave blank to auto-fill from a source URL"
         />
       </div>
       {err && <p className="text-sm text-red-600">{err}</p>}

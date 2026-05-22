@@ -208,3 +208,148 @@ export const adminUpdateSlug = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true, slug: data.slug };
   });
+
+// ---------- Auto-scrape a source URL to pre-fill a new game ----------
+
+function pick(re: RegExp, html: string): string | undefined {
+  const m = html.match(re);
+  return m?.[1]?.trim();
+}
+
+function decodeEntities(s: string): string {
+  return s
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, " ");
+}
+
+function absolutize(url: string, base: string): string {
+  try {
+    return new URL(url, base).toString();
+  } catch {
+    return url;
+  }
+}
+
+function extractMain(html: string): string {
+  // Strip <script>, <style>, <noscript>
+  let h = html
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<noscript[\s\S]*?<\/noscript>/gi, "")
+    .replace(/<!--[\s\S]*?-->/g, "");
+
+  // Try <article>, then <main>, then a content-ish div, else body
+  const article = h.match(/<article[\s\S]*?<\/article>/i)?.[0];
+  if (article) return article;
+  const main = h.match(/<main[\s\S]*?<\/main>/i)?.[0];
+  if (main) return main;
+  const body = h.match(/<body[\s\S]*?<\/body>/i)?.[0];
+  return body ?? h;
+}
+
+export const adminScrapeGameUrl = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) =>
+    z.object({ url: z.string().trim().url().max(2000) }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { userId } = context as { userId: string };
+    await assertAdmin(userId);
+
+    const res = await fetch(data.url, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (compatible; YonoBot/1.0; +https://yono-mirror-magic.lovable.app)",
+        Accept: "text/html,application/xhtml+xml",
+      },
+      redirect: "follow",
+    });
+    if (!res.ok) {
+      throw new Error(`Failed to fetch URL (${res.status} ${res.statusText})`);
+    }
+    const html = await res.text();
+
+    const ogTitle =
+      pick(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i, html) ||
+      pick(/<meta[^>]+name=["']twitter:title["'][^>]+content=["']([^"']+)["']/i, html);
+    const titleTag = pick(/<title[^>]*>([^<]+)<\/title>/i, html);
+    const title = decodeEntities(ogTitle || titleTag || "").slice(0, 300);
+
+    const ogImg =
+      pick(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i, html) ||
+      pick(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i, html);
+    let img = ogImg || "";
+    if (!img) {
+      // First substantial <img>
+      const firstImg = pick(/<img[^>]+src=["']([^"']+)["']/i, html);
+      if (firstImg) img = firstImg;
+    }
+    if (img) img = absolutize(img, data.url);
+
+    const content = extractMain(html);
+
+    if (!title) throw new Error("Could not detect a page title");
+    return { title, img, content };
+  });
+
+export const adminCreateGameFromUrl = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) =>
+    z.object({ url: z.string().trim().url().max(2000) }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { userId } = context as { userId: string };
+    await assertAdmin(userId);
+
+    // Reuse the scrape logic by calling the underlying fetch inline
+    const res = await fetch(data.url, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (compatible; YonoBot/1.0; +https://yono-mirror-magic.lovable.app)",
+        Accept: "text/html,application/xhtml+xml",
+      },
+      redirect: "follow",
+    });
+    if (!res.ok) {
+      throw new Error(`Failed to fetch URL (${res.status} ${res.statusText})`);
+    }
+    const html = await res.text();
+    const ogTitle =
+      pick(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i, html) ||
+      pick(/<meta[^>]+name=["']twitter:title["'][^>]+content=["']([^"']+)["']/i, html);
+    const titleTag = pick(/<title[^>]*>([^<]+)<\/title>/i, html);
+    const title = decodeEntities(ogTitle || titleTag || "").slice(0, 300);
+    if (!title) throw new Error("Could not detect a page title");
+    const ogImg =
+      pick(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i, html) ||
+      pick(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i, html);
+    let img = ogImg || pick(/<img[^>]+src=["']([^"']+)["']/i, html) || "";
+    if (img) img = absolutize(img, data.url);
+    if (!img) throw new Error("Could not detect a page image (og:image)");
+    const content = extractMain(html);
+
+    const slug = slugify(title);
+    if (!slug) throw new Error("Could not derive slug from title");
+
+    const { count } = await supabaseAdmin
+      .from("games")
+      .select("id", { count: "exact", head: true });
+
+    const { data: row, error } = await supabaseAdmin
+      .from("games")
+      .insert({
+        title,
+        slug,
+        img,
+        content,
+        position: count ?? 0,
+      })
+      .select("id, slug")
+      .single();
+    if (error) throw new Error(error.message);
+    return row;
+  });
