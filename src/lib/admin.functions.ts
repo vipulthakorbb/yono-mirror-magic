@@ -10,6 +10,71 @@ const slugify = (s: string) =>
     .replace(/^-+|-+$/g, "")
     .slice(0, 200);
 
+// ---------- Auto-generate description from title + source link ----------
+
+function extractBonus(title: string): string {
+  // Match ₹160, Rs 160, 160 bonus, 65% etc.
+  const m =
+    title.match(/(?:₹|rs\.?\s*|inr\s*)\s*(\d{2,5})/i) ||
+    title.match(/(\d{2,4})\s*%?\s*(?:bonus|signup|welcome)/i) ||
+    title.match(/get\s*(\d{2,4})/i);
+  return m?.[1] ? `₹${m[1]}` : "₹100";
+}
+
+function cleanName(title: string): string {
+  // Drop everything after the first colon, pipe or dash to get a clean name.
+  return title.split(/[:|\-–]/)[0].trim() || title.trim();
+}
+
+function generateDescription(title: string, sourceUrl?: string | null): string {
+  const name = cleanName(title);
+  const bonus = extractBonus(title);
+  const safeUrl = sourceUrl && sourceUrl.trim() ? sourceUrl.trim() : "#";
+  const cta = sourceUrl
+    ? `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer nofollow" style="align-items:center;background:#007bff;border-radius:12px;box-shadow:rgba(0,123,255,0.3) 0 5px 15px;color:#fff;display:inline-flex;font-size:16px;font-weight:bold;justify-content:center;padding:14px 36px;text-decoration:none;margin:18px 0;">DOWNLOAD ${name.toUpperCase()}</a>`
+    : "";
+  return `<div style="font-family:'Segoe UI',Arial,sans-serif;max-width:850px;margin:auto;padding:20px;color:#333;line-height:1.8;">
+  <div style="text-align:center;">${cta}</div>
+  <h2 style="border-bottom:2px solid #007bff;color:#007bff;padding-bottom:10px;">${name} APK Review: Get ${bonus} Welcome Bonus 2026</h2>
+  <p><strong>${name}</strong> is one of the most trusted gaming apps of 2026, offering a smooth and secure experience for Indian players. New users who register through the official ${name} APK link are eligible for an instant <strong>${bonus} Welcome Bonus</strong> credited directly to their account.</p>
+
+  <h3>Why Choose ${name}?</h3>
+  <ul>
+    <li><strong>Instant ${bonus} signup bonus</strong> for new users.</li>
+    <li>256-bit AES encryption for full account &amp; payment security.</li>
+    <li>Fast UPI / IMPS withdrawals with no hidden charges.</li>
+    <li>24×7 customer support available in Hindi &amp; English.</li>
+    <li>Wide range of games — Rummy, Teen Patti, Slots, Andar Bahar and more.</li>
+  </ul>
+
+  <h3>${name} Bonus Details</h3>
+  <table style="background:#f9f9f9;border-collapse:collapse;margin:20px 0;width:100%;">
+    <tbody>
+      <tr style="background:#007bff;color:#fff;"><th style="padding:12px;text-align:left;">Feature</th><th style="padding:12px;text-align:left;">Details</th></tr>
+      <tr style="border:1px solid #ddd;"><td style="padding:12px;font-weight:bold;">Welcome Bonus</td><td style="padding:12px;">${bonus} Instant Credit</td></tr>
+      <tr style="border:1px solid #ddd;"><td style="padding:12px;font-weight:bold;">App Name</td><td style="padding:12px;">${name}</td></tr>
+      <tr style="border:1px solid #ddd;"><td style="padding:12px;font-weight:bold;">Withdrawal</td><td style="padding:12px;">UPI / Bank / IMPS</td></tr>
+      <tr style="border:1px solid #ddd;"><td style="padding:12px;font-weight:bold;">Min. Withdrawal</td><td style="padding:12px;">₹100</td></tr>
+      <tr style="border:1px solid #ddd;"><td style="padding:12px;font-weight:bold;">Support</td><td style="padding:12px;">24×7 Live Chat</td></tr>
+    </tbody>
+  </table>
+
+  <h3>How to Claim ${bonus} Bonus</h3>
+  <ol>
+    <li>Click the <strong>DOWNLOAD</strong> button above to open the official ${name} page.</li>
+    <li>Install the APK and register with your mobile number.</li>
+    <li>Complete OTP verification — your ${bonus} bonus is credited instantly.</li>
+    <li>Start playing your favourite games and withdraw winnings via UPI.</li>
+  </ol>
+
+  <div style="text-align:center;">${cta}</div>
+
+  <div style="background:#f8d7da;border-radius:5px;color:#721c24;font-size:12px;margin-top:30px;padding:15px;text-align:center;">
+    <strong>Disclaimer:</strong> This review is for informational purposes only. Skill-based gaming involves financial risk. Play responsibly. 18+ only.
+  </div>
+</div>`;
+}
+
 const GameInput = z.object({
   title: z.string().trim().min(1).max(300),
   slug: z
@@ -84,7 +149,7 @@ export const adminCreateGame = createServerFn({ method: "POST" })
 
     // Admin-entered content wins. Source URL is only used as an image fallback.
     let img = data.img || "";
-    const content = data.content ?? "";
+    let content = data.content ?? "";
     if (data.source_url && !img) {
       try {
         const scraped = await scrapeUrl(data.source_url);
@@ -92,6 +157,9 @@ export const adminCreateGame = createServerFn({ method: "POST" })
       } catch {
         // ignore scrape errors; admin can paste an image instead
       }
+    }
+    if (!content.trim()) {
+      content = generateDescription(data.title, data.source_url);
     }
     if (!img) throw new Error("Please upload an image or provide a source link with an og:image.");
 
@@ -142,10 +210,21 @@ export const adminUpdateGame = createServerFn({ method: "POST" })
       patch.source_url = rest.source_url || null;
     }
     if (rest.img) patch.img = rest.img;
-    // Admin-entered description wins. Empty string means "clear it"; undefined
-    // means "leave existing content alone".
-    if (rest.content !== undefined && rest.content !== "") {
+    // If admin typed a description, use it. If they cleared it (empty string)
+    // or didn't touch it but changed the title/link, auto-regenerate so the
+    // description always matches the current game name + bonus + link.
+    if (rest.content !== undefined && rest.content.trim() !== "") {
       patch.content = rest.content;
+    } else if (rest.content === "" || rest.title !== undefined || rest.source_url !== undefined) {
+      // Need title + source_url to regenerate; fetch existing row to fill blanks.
+      const { data: existing } = await supabaseAdmin
+        .from("games")
+        .select("title, source_url")
+        .eq("id", id)
+        .maybeSingle();
+      const title = rest.title ?? existing?.title ?? "";
+      const src = rest.source_url !== undefined ? rest.source_url : existing?.source_url ?? "";
+      if (title) patch.content = generateDescription(title, src);
     }
 
     const { error } = await supabaseAdmin
