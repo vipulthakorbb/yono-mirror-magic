@@ -20,6 +20,7 @@ export function GameForm({ initial, submitLabel, onSubmit }: Props) {
   const [slug, setSlug] = useState(initial?.slug ?? "");
   const [img, setImg] = useState(initial?.img ?? "");
   const [sourceUrl, setSourceUrl] = useState(initial?.source_url ?? "");
+  const [description, setDescription] = useState(initial?.content ?? "");
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -69,6 +70,7 @@ export function GameForm({ initial, submitLabel, onSubmit }: Props) {
         slug: slug.trim() || undefined,
         img,
         source_url: sourceUrl.trim() || undefined,
+        content: description,
       });
     } catch (e) {
       setErr((e as Error).message);
