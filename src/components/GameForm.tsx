@@ -157,7 +157,7 @@ export function GameForm({ initial, submitLabel, onSubmit }: Props) {
           Game link
           <span className="font-normal text-gray-500">
             {" "}
-            (we'll fetch the page content automatically on save)
+            (optional — used as a fallback if you don't paste an image)
           </span>
         </label>
         <input
@@ -168,8 +168,23 @@ export function GameForm({ initial, submitLabel, onSubmit }: Props) {
           placeholder="https://example.com/your-game-page"
         />
         <p className="mt-1 text-xs text-gray-500">
-          Paste the source page URL. On save, we'll re-fetch and update the game's content
-          and image.
+          Where users will go when they click the game. If left blank we'll keep the existing link.
+        </p>
+      </div>
+      <div>
+        <label className="mb-1 block text-sm font-semibold">
+          Description
+          <span className="font-normal text-gray-500"> (shown on the game page)</span>
+        </label>
+        <textarea
+          className="w-full rounded-md border px-3 py-2 text-sm"
+          rows={8}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Write a short review or description of this game. You can use simple HTML tags like <p>, <strong>, <ul>, <li>."
+        />
+        <p className="mt-1 text-xs text-gray-500">
+          Plain text or HTML. Leave blank to keep the existing description.
         </p>
       </div>
       {err && <p className="text-sm text-red-600">{err}</p>}
