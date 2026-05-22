@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { GAMES } from "@/data/games";
 import { useEffect, useState } from "react";
@@ -62,7 +62,7 @@ function Index() {
         <div className="ry-app-grid">
           {games.map((g, idx) => (
             <article className="ry-card" key={g.href}>
-              <a href={g.href} target="_blank" rel="noopener noreferrer" className="ry-icon-box">
+              <Link to="/games/$slug" params={{ slug: g.slug }} className="ry-icon-box">
                 <img
                   src={g.img}
                   alt={g.title}
@@ -71,11 +71,11 @@ function Index() {
                   loading={idx < 10 ? "eager" : "lazy"}
                   decoding="async"
                 />
-              </a>
+              </Link>
               <h2 className="ry-app-name">{g.title}</h2>
-              <a href={g.href} target="_blank" rel="noopener noreferrer" className="ry-dl-btn">
-                OFFICIAL WEB
-              </a>
+              <Link to="/games/$slug" params={{ slug: g.slug }} className="ry-dl-btn">
+                VIEW DETAILS
+              </Link>
             </article>
           ))}
         </div>
