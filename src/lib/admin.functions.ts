@@ -313,6 +313,27 @@ export const adminUpdateSlug = createServerFn({ method: "POST" })
     return { ok: true, slug: data.slug };
   });
 
+export const adminUpdateSourceUrl = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) =>
+    z
+      .object({
+        id: z.string().uuid(),
+        source_url: z.string().trim().url().max(2000).or(z.literal("")),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { userId } = context as { userId: string };
+    await assertAdmin(userId);
+    const { error } = await supabaseAdmin
+      .from("games")
+      .update({ source_url: data.source_url || null })
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true, source_url: data.source_url };
+  });
+
 // ---------- Auto-scrape a source URL to pre-fill a new game ----------
 
 function pick(re: RegExp, html: string): string | undefined {
