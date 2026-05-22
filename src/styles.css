@@ -159,7 +159,7 @@
   color: var(--ry-text);
   min-height: 100vh;
   overflow-x: hidden;
-  padding-bottom: 80px;
+  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
 }
 
 /* Header banner */
@@ -269,7 +269,9 @@
   position: fixed; bottom: 0; left: 0; width: 100%;
   background: var(--ry-accent);
   border-top: 2px solid #ff0000;
-  display: flex; justify-content: space-around; padding: 15px 0; z-index: 1000;
+  display: flex; justify-content: space-around; padding: 15px 0;
+  padding-bottom: calc(15px + env(safe-area-inset-bottom, 0px));
+  z-index: 1000;
 }
 .ry-bottom-nav a { color: #fff; font-size: 24px; text-decoration: none; transition: .3s; }
 .ry-bottom-nav a:hover { color: #ffcc00; transform: scale(1.2); }
