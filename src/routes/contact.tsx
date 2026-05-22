@@ -33,7 +33,7 @@ function ContactPage() {
         </p>
         <p>
           <strong>Email:</strong>{" "}
-          <a href="mailto:support@royalyono.com">support@royalyono.com</a>
+          <a href="mailto:jaymatajijaymataji486@gmail.com">jaymatajijaymataji486@gmail.com</a>
         </p>
         <form
           className="ry-form"
