@@ -9,12 +9,13 @@ export type GameRow = {
   img: string;
   content: string;
   position: number;
+  source_url?: string | null;
 };
 
 export const listGames = createServerFn({ method: "GET" }).handler(async () => {
   const { data, error } = await supabaseAdmin
     .from("games")
-    .select("id, slug, title, img, content, position")
+    .select("id, slug, title, img, content, position, source_url")
     .order("position", { ascending: true })
     .limit(500);
   if (error) throw new Error(error.message);
@@ -28,7 +29,7 @@ export const getGameBySlug = createServerFn({ method: "GET" })
   .handler(async ({ data }) => {
     const { data: game, error } = await supabaseAdmin
       .from("games")
-      .select("id, slug, title, img, content, position")
+      .select("id, slug, title, img, content, position, source_url")
       .eq("slug", data.slug)
       .maybeSingle();
     if (error) throw new Error(error.message);

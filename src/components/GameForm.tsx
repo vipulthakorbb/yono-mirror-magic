@@ -174,17 +174,17 @@ export function GameForm({ initial, submitLabel, onSubmit }: Props) {
       <div>
         <label className="mb-1 block text-sm font-semibold">
           Description
-          <span className="font-normal text-gray-500"> (shown on the game page)</span>
+          <span className="font-normal text-gray-500"> (optional — auto-generated if blank)</span>
         </label>
         <textarea
           className="w-full rounded-md border px-3 py-2 text-sm"
           rows={8}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Write a short review or description of this game. You can use simple HTML tags like <p>, <strong>, <ul>, <li>."
+          placeholder="Leave blank — we'll auto-write a review using the game name + bonus amount from the title and add a DOWNLOAD button using your game link."
         />
         <p className="mt-1 text-xs text-gray-500">
-          Plain text or HTML. Leave blank to keep the existing description.
+          Leave blank to auto-generate from the title (bonus amount is detected automatically) and the game link.
         </p>
       </div>
       {err && <p className="text-sm text-red-600">{err}</p>}
