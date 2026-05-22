@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { setResponseHeaders } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
@@ -12,7 +13,29 @@ export type GameRow = {
   source_url?: string | null;
 };
 
+// Aggressive edge caching: serve from Cloudflare's cache so the DB is barely
+// touched even at millions of req/day. Admin mutations bump the cache key
+// via `cacheBust` so changes show up within seconds.
+//
+// - s-maxage: how long the edge keeps the response fresh
+// - stale-while-revalidate: how long the edge keeps serving stale while it
+//   refreshes in the background — virtually zero origin load during a spike
+function setEdgeCache(seconds = 300, swr = 86400) {
+  try {
+    setResponseHeaders(
+      new Headers({
+        "Cache-Control": `public, max-age=60, s-maxage=${seconds}, stale-while-revalidate=${swr}`,
+        "CDN-Cache-Control": `public, s-maxage=${seconds}, stale-while-revalidate=${swr}`,
+      }),
+    );
+  } catch {
+    // setResponseHeaders throws when called outside a server request (e.g.
+    // during a client-side React Query refetch). Safe to ignore there.
+  }
+}
+
 export const listGames = createServerFn({ method: "GET" }).handler(async () => {
+  setEdgeCache(300, 86400);
   const { data, error } = await supabaseAdmin
     .from("games")
     .select("id, slug, title, img, content, position, source_url")
@@ -27,6 +50,7 @@ export const getGameBySlug = createServerFn({ method: "GET" })
     z.object({ slug: z.string().min(1).max(300) }).parse(d),
   )
   .handler(async ({ data }) => {
+    setEdgeCache(600, 86400);
     const { data: game, error } = await supabaseAdmin
       .from("games")
       .select("id, slug, title, img, content, position, source_url")
