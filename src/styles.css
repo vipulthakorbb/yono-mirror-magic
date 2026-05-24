@@ -234,7 +234,7 @@
 }
 .ry-icon-box { display: block; }
 .ry-icon-box img {
-  width: 80%; aspect-ratio: 1/1; border-radius: 14px; object-fit: cover; margin: 0 auto;
+  width: 80%; aspect-ratio: 1/1; border-radius: 50%; object-fit: cover; margin: 0 auto;
 }
 .ry-app-name {
   font-size: 13px; font-weight: 700; min-height: 38px; overflow: hidden;
@@ -345,7 +345,7 @@
   flex-wrap: wrap;
 }
 .ry-game-header > div { flex: 1 1 200px; min-width: 0; }
-.ry-game-icon { width: 88px; height: 88px; border-radius: 18px; object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,.1); flex-shrink: 0; }
+.ry-game-icon { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,.1); flex-shrink: 0; }
 .ry-game-header h1 { font-size: clamp(16px, 4vw, 22px); margin: 0 0 6px; color: var(--ry-text); line-height: 1.3; word-break: break-word; }
 .ry-crumbs { font-size: 12px; color: #666; margin: 0; }
 .ry-crumbs a { color: var(--ry-accent); text-decoration: none; font-weight: 600; }
@@ -365,7 +365,7 @@
 .ry-game-body iframe { max-width: 100%; width: 100%; aspect-ratio: 16/9; height: auto; }
 @media (max-width: 600px) {
   .ry-game-page { padding: 12px; margin: 10px 0; border-radius: 10px; }
-  .ry-game-icon { width: 64px; height: 64px; border-radius: 14px; }
+  .ry-game-icon { width: 64px; height: 64px; border-radius: 50%; }
   .ry-game-body { font-size: 14px; }
 }
 
