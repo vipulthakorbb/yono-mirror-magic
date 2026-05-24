@@ -149,6 +149,7 @@ function GamePage() {
                     <img src={cdnImg(g.img)} alt={g.title} width={180} height={180} loading="lazy" decoding="async" />
                   </Link>
                   <h3 className="ry-app-name">{g.title}</h3>
+                  <div className="ry-stars" aria-label="Rating 5 out of 5">★★★★★</div>
                   <Link to="/games/$slug" params={{ slug: g.slug }} className="ry-dl-btn">
                     VIEW DETAILS
                   </Link>
