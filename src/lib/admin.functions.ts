@@ -10,6 +10,18 @@ const slugify = (s: string) =>
     .replace(/^-+|-+$/g, "")
     .slice(0, 200);
 
+// Extract the storage path from a public game-icons URL so we can delete it.
+function extractStoragePath(url: string): string | null {
+  const m = url.match(/\/storage\/v1\/object\/public\/game-icons\/(.+)$/);
+  if (!m) return null;
+  const raw = m[1].split("?")[0];
+  try {
+    return decodeURIComponent(raw);
+  } catch {
+    return raw;
+  }
+}
+
 // ---------- Auto-generate description from title + source link ----------
 
 function extractBonus(title: string): string {
@@ -227,11 +239,27 @@ export const adminUpdateGame = createServerFn({ method: "POST" })
       if (title) patch.content = generateDescription(title, src);
     }
 
+    // Capture the old image URL so we can clean it up if it's being replaced.
+    let oldImg: string | null = null;
+    if (rest.img) {
+      const { data: prev } = await supabaseAdmin
+        .from("games")
+        .select("img")
+        .eq("id", id)
+        .maybeSingle();
+      oldImg = prev?.img ?? null;
+    }
     const { error } = await supabaseAdmin
       .from("games")
       .update(patch)
       .eq("id", id);
     if (error) throw new Error(error.message);
+    if (oldImg && oldImg !== rest.img) {
+      const path = extractStoragePath(oldImg);
+      if (path) {
+        await supabaseAdmin.storage.from("game-icons").remove([path]);
+      }
+    }
     return { ok: true };
   });
 
@@ -241,8 +269,19 @@ export const adminDeleteGame = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { userId } = context as { userId: string };
     await assertAdmin(userId);
+    const { data: existing } = await supabaseAdmin
+      .from("games")
+      .select("img")
+      .eq("id", data.id)
+      .maybeSingle();
     const { error } = await supabaseAdmin.from("games").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
+    if (existing?.img) {
+      const path = extractStoragePath(existing.img);
+      if (path) {
+        await supabaseAdmin.storage.from("game-icons").remove([path]);
+      }
+    }
     return { ok: true };
   });
 
