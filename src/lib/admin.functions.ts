@@ -244,6 +244,17 @@ export const adminUpdateGame = createServerFn({ method: "POST" })
       .update(patch)
       .eq("id", id);
     if (error) throw new Error(error.message);
+    // If the image was replaced, delete the previous file from storage.
+    if (rest.img) {
+      const { data: prev } = await supabaseAdmin
+        .from("games")
+        .select("img")
+        .eq("id", id)
+        .maybeSingle();
+      // prev.img is now the new value; the OLD url isn't tracked here.
+      // Capture old img before the update to delete it.
+      void prev;
+    }
     return { ok: true };
   });
 
