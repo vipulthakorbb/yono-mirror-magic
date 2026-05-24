@@ -239,21 +239,26 @@ export const adminUpdateGame = createServerFn({ method: "POST" })
       if (title) patch.content = generateDescription(title, src);
     }
 
-    const { error } = await supabaseAdmin
-      .from("games")
-      .update(patch)
-      .eq("id", id);
-    if (error) throw new Error(error.message);
-    // If the image was replaced, delete the previous file from storage.
+    // Capture the old image URL so we can clean it up if it's being replaced.
+    let oldImg: string | null = null;
     if (rest.img) {
       const { data: prev } = await supabaseAdmin
         .from("games")
         .select("img")
         .eq("id", id)
         .maybeSingle();
-      // prev.img is now the new value; the OLD url isn't tracked here.
-      // Capture old img before the update to delete it.
-      void prev;
+      oldImg = prev?.img ?? null;
+    }
+    const { error } = await supabaseAdmin
+      .from("games")
+      .update(patch)
+      .eq("id", id);
+    if (error) throw new Error(error.message);
+    if (oldImg && oldImg !== rest.img) {
+      const path = extractStoragePath(oldImg);
+      if (path) {
+        await supabaseAdmin.storage.from("game-icons").remove([path]);
+      }
     }
     return { ok: true };
   });
