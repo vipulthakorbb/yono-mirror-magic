@@ -107,6 +107,7 @@ function Index() {
                 />
               </Link>
               <h2 className="ry-app-name">{g.title}</h2>
+              <div className="ry-stars" aria-label="Rating 5 out of 5">★★★★★</div>
               <Link to="/games/$slug" params={{ slug: g.slug }} className="ry-dl-btn">
                 VIEW DETAILS
               </Link>
