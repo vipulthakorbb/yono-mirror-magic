@@ -151,7 +151,7 @@ function GamePage() {
                   <h3 className="ry-app-name">{g.title}</h3>
                   <div className="ry-stars" aria-label="Rating 5 out of 5">★★★★★</div>
                   <Link to="/games/$slug" params={{ slug: g.slug }} className="ry-dl-btn">
-                    VIEW DETAILS
+                    DOWNLOAD
                   </Link>
                 </article>
               ))}
