@@ -234,7 +234,7 @@
 }
 .ry-icon-box { display: block; }
 .ry-icon-box img {
-  width: 80%; aspect-ratio: 1/1; border-radius: 50%; object-fit: cover; margin: 0 auto;
+  width: 80%; aspect-ratio: 1/1; border-radius: 9999px !important; object-fit: cover; margin: 0 auto;
 }
 .ry-app-name {
   font-size: 13px; font-weight: 700; min-height: 38px; overflow: hidden;
