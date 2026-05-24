@@ -225,7 +225,7 @@
   .ry-app-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 6px; }
   .ry-card { padding: 6px; }
   .ry-app-name { font-size: 12px !important; min-height: 36px; line-height: 1.25; margin: 6px 0 4px; }
-  .ry-dl-btn { font-size: 10px !important; padding: 6px 0 !important; }
+  .ry-dl-btn { font-size: 12px !important; padding: 7px 0 !important; }
 }
 
 .ry-card {
@@ -244,8 +244,8 @@
 }
 .ry-dl-btn {
   background: #e53935; color: #fff; text-decoration: none;
-  padding: 6px; border-radius: 6px; display: block; font-weight: 900;
-  font-size: 11px; margin-top: 5px;
+  padding: 8px; border-radius: 6px; display: block; font-weight: 900;
+  font-size: 13px; margin-top: 5px;
 }
 .ry-stars {
   color: #ffc107; font-size: 14px; letter-spacing: 2px;
