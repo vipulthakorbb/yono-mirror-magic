@@ -3,7 +3,7 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { SiteLayout } from "@/components/SiteLayout";
 import { listGames } from "@/lib/games.functions";
 import { cdnImg } from "@/lib/cdn";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 const gamesQueryOptions = queryOptions({
   queryKey: ["games", "all"],
@@ -63,23 +63,20 @@ function Index() {
   const { data: GAMES } = useSuspenseQuery(gamesQueryOptions);
   const INITIAL = 20;
   const [visible, setVisible] = useState(INITIAL);
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (visible >= GAMES.length) return;
-    const el = sentinelRef.current;
-    if (!el || typeof IntersectionObserver === "undefined") return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          setVisible((v) => Math.min(v + 20, GAMES.length));
-        }
-      },
-      { rootMargin: "1200px 0px" },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [visible, GAMES.length]);
+    const onScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.offsetHeight - 800
+      ) {
+        setVisible((v) => Math.min(v + 20, GAMES.length));
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [visible]);
 
   const games = GAMES.slice(0, visible);
 
@@ -100,19 +97,15 @@ function Index() {
         </header>
         <div className="ry-app-grid">
           {games.map((g, idx) => (
-            <article
-              className="ry-card"
-              key={g.id}
-              style={idx >= 6 ? { contentVisibility: "auto", containIntrinsicSize: "260px 260px" } : undefined}
-            >
+            <article className="ry-card" key={g.id}>
               <Link to="/games/$slug" params={{ slug: g.slug }} className="ry-icon-box">
                 <img
                   src={cdnImg(g.img)}
                   alt={g.title}
                   width={180}
                   height={180}
-                  loading={idx < 4 ? "eager" : "lazy"}
-                  fetchPriority={idx === 0 ? "high" : idx >= 4 ? "low" : undefined}
+                  loading={idx < 10 ? "eager" : "lazy"}
+                  fetchPriority={idx === 0 ? "high" : undefined}
                   decoding="async"
                 />
               </Link>
@@ -124,7 +117,6 @@ function Index() {
             </article>
           ))}
         </div>
-        <div ref={sentinelRef} aria-hidden="true" style={{ height: 1 }} />
         {visible < GAMES.length && (
           <div className="ry-loader">Loading more games…</div>
         )}
