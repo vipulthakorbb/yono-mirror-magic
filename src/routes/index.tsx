@@ -15,22 +15,22 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "Yono Rummy, Yono Games & Teen Patti Bonus Apps — RoyalYono" },
+      { title: "Yono Rummy APK & Yono Games Download — Free Signup Bonus | RoyalYono" },
       {
         name: "description",
         content:
-          "Download Yono Rummy APK, Yono Games, Teen Patti Master/Gold, Rummy Noble & real cash apps with signup bonus on RoyalYono.",
+          "Download Yono Rummy APK, all Yono Games, Yono Arcade, Teen Patti Master & Rummy Noble with free signup bonus. Honest reviews & official links.",
       },
       {
         name: "keywords",
         content:
-          "yono rummy, yono games, yono games download, yono rummy apk, yono rummy download, yono all game, yono arcade, teen patti, teen patti master, teen patti gold, teen patti star, 3 patti, rummy noble, rummy wealth, rummy nabob, rummy mars, holy rummy, all rummy apps, rummy app, jili games, 777 games, jalwa game, spin 101, bingo 101, dd1 game, real cash games, money games online, online earning apps, teen patti bonus",
+          "yono rummy, yono rummy apk, yono rummy download, yono games, yono games download, yono game, yono all game, yono app, yono apk, yono arcade, yono 777, yono slots, yono vip, royal yono, royalyono, teen patti master, teen patti gold, rummy noble, rummy wealth, rummy nabob, rummy mars, 777 games, jalwa game, spin 101, jili games",
       },
-      { property: "og:title", content: "Yono Rummy, Yono Games & Teen Patti Bonus Apps — RoyalYono" },
+      { property: "og:title", content: "Yono Rummy APK & Yono Games Download — RoyalYono" },
       {
         property: "og:description",
         content:
-          "Yono Rummy APK, all Yono Games, Teen Patti Master/Gold, Rummy Noble, Jili games & real cash earning apps with signup bonus.",
+          "Download Yono Rummy APK, all Yono Games & Teen Patti bonus apps. Free signup bonus, honest reviews, official APK links.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://royalyono.com/" },
@@ -93,7 +93,7 @@ function Index() {
       />
       <main className="ry-container">
         <header className="ry-content-area">
-          <h1>Yono Rummy, Yono Games, Teen Patti &amp; Rummy Apps with Signup Bonus ({GAMES.length}+ Apps)</h1>
+          <h1>Yono Rummy APK, Yono Games Download &amp; Teen Patti Bonus Apps ({GAMES.length}+ Apps)</h1>
         </header>
         <div className="ry-app-grid">
           {games.map((g, idx) => (
