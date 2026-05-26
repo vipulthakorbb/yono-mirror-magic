@@ -19,7 +19,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Download Yono Rummy APK, all Yono Games, Teen Patti Gold, Teen Patti Master, Rummy Noble, Jili games & real cash earning apps with signup bonus — honest reviews on RoyalYono.",
+          "Download Yono Rummy APK, Yono Games, Teen Patti Master/Gold, Rummy Noble & real cash apps with signup bonus on RoyalYono.",
       },
       {
         name: "keywords",
@@ -92,6 +92,9 @@ function Index() {
         fetchPriority="high"
       />
       <main className="ry-container">
+        <header className="ry-content-area">
+          <h1>Yono Rummy, Yono Games, Teen Patti &amp; Rummy Apps with Signup Bonus ({GAMES.length}+ Apps)</h1>
+        </header>
         <div className="ry-app-grid">
           {games.map((g, idx) => (
             <article className="ry-card" key={g.id}>
@@ -119,7 +122,7 @@ function Index() {
         )}
 
         <section className="ry-content-area">
-          <h1>Yono Rummy, Yono Games, Teen Patti &amp; Rummy Apps with Signup Bonus ({GAMES.length}+ Apps)</h1>
+          <h2>About RoyalYono</h2>
           <p>
             Welcome to <strong>RoyalYono</strong> — the trusted hub for{" "}
             <strong>Yono Rummy APK</strong>, <strong>Yono Games download</strong>,{" "}

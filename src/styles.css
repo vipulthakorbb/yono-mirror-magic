@@ -307,7 +307,9 @@
 .ry-search-form input {
   width: 100%; padding: 12px 20px; border: 2px solid #00e5ff;
   border-radius: 50px 0 0 50px; background: #fff; outline: none; font-size: 16px;
+  color: #111;
 }
+.ry-search-form input::placeholder { color: #595959; opacity: 1; }
 .ry-search-form button {
   padding: 0 25px; background: #00e5ff; border: none;
   border-radius: 0 50px 50px 0; color: #000; font-weight: bold; cursor: pointer;
