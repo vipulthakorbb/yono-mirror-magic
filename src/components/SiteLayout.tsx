@@ -37,7 +37,12 @@ export function SiteLayout({ children }: { children: ReactNode }) {
 
       <div className={`ry-search-overlay ${searchOpen ? "active" : ""}`}>
         <form action="/search" method="get" className="ry-search-form">
-          <input type="text" name="q" placeholder="Search game posts..." />
+          <input
+            type="text"
+            name="q"
+            aria-label="Search game posts"
+            placeholder="Search game posts..."
+          />
           <button type="submit">GO</button>
         </form>
         <div className="ry-search-close" onClick={() => setSearchOpen(false)}>
