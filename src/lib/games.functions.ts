@@ -31,7 +31,7 @@ export type SiteSettings = {
 // - s-maxage: how long the edge keeps the response fresh
 // - stale-while-revalidate: how long the edge keeps serving stale while it
 //   refreshes in the background — virtually zero origin load during a spike
-function setEdgeCache(seconds = 300, swr = 86400) {
+function setEdgeCache(seconds = 1800, swr = 604800) {
   try {
     setResponseHeaders(
       new Headers({
@@ -46,7 +46,7 @@ function setEdgeCache(seconds = 300, swr = 86400) {
 }
 
 export const listGames = createServerFn({ method: "GET" }).handler(async () => {
-  setEdgeCache(300, 86400);
+  setEdgeCache(1800, 604800);
   const { data, error } = await supabaseAdmin
     .from("games")
     .select("id, slug, title, img, content, position, source_url, meta_title, meta_description")
@@ -61,7 +61,7 @@ export const getGameBySlug = createServerFn({ method: "GET" })
     z.object({ slug: z.string().min(1).max(300) }).parse(d),
   )
   .handler(async ({ data }) => {
-    setEdgeCache(600, 86400);
+    setEdgeCache(1800, 604800);
     const { data: game, error } = await supabaseAdmin
       .from("games")
       .select("id, slug, title, img, content, position, source_url, meta_title, meta_description")
@@ -85,7 +85,7 @@ export const getGameBySlug = createServerFn({ method: "GET" })
   });
 
 export const getSiteSettings = createServerFn({ method: "GET" }).handler(async () => {
-  setEdgeCache(300, 86400);
+  setEdgeCache(1800, 604800);
   const { data, error } = await supabaseAdmin
     .from("site_settings")
     .select("meta_title, meta_description, meta_keywords, section_title, section_content, section_image")
