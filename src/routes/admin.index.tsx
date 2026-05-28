@@ -108,6 +108,12 @@ function AdminGamesList() {
         <div className="flex items-center gap-3">
           {savingOrder && <span className="text-xs text-gray-500">Saving order…</span>}
           <Link
+            to="/admin/settings"
+            className="rounded-md border border-blue-600 px-4 py-2 text-sm font-semibold text-blue-600 hover:bg-blue-50"
+          >
+            Home page settings
+          </Link>
+          <Link
             to="/admin/new"
             className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
           >
