@@ -35,6 +35,7 @@ function EditGame() {
             title: data.title,
             slug: data.slug,
             img: data.img,
+            content: data.content,
             source_url: (data as { source_url?: string | null }).source_url ?? "",
             meta_title: (data as { meta_title?: string | null }).meta_title ?? "",
             meta_description: (data as { meta_description?: string | null }).meta_description ?? "",
