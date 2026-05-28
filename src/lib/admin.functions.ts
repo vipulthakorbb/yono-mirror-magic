@@ -552,3 +552,57 @@ export const adminCreateGameFromUrl = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return row;
   });
+// ---------- Site settings (home page editable content) ----------
+
+const SiteSettingsInput = z.object({
+  meta_title: z.string().trim().max(300).optional().or(z.literal("")),
+  meta_description: z.string().trim().max(500).optional().or(z.literal("")),
+  meta_keywords: z.string().trim().max(1000).optional().or(z.literal("")),
+  section_title: z.string().trim().max(300).optional().or(z.literal("")),
+  section_content: z.string().max(500000).optional().or(z.literal("")),
+  section_image: z.string().trim().max(2000).optional().or(z.literal("")),
+});
+
+export const adminGetSiteSettings = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { userId } = context as { userId: string };
+    await assertAdmin(userId);
+    const { data, error } = await supabaseAdmin
+      .from("site_settings")
+      .select("meta_title, meta_description, meta_keywords, section_title, section_content, section_image")
+      .eq("id", true)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    return data ?? {
+      meta_title: "",
+      meta_description: "",
+      meta_keywords: "",
+      section_title: "",
+      section_content: "",
+      section_image: "",
+    };
+  });
+
+export const adminUpdateSiteSettings = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => SiteSettingsInput.parse(d))
+  .handler(async ({ data, context }) => {
+    const { userId } = context as { userId: string };
+    await assertAdmin(userId);
+    const payload = {
+      id: true,
+      meta_title: data.meta_title || null,
+      meta_description: data.meta_description || null,
+      meta_keywords: data.meta_keywords || null,
+      section_title: data.section_title || null,
+      section_content: data.section_content || null,
+      section_image: data.section_image || null,
+      updated_at: new Date().toISOString(),
+    };
+    const { error } = await supabaseAdmin
+      .from("site_settings")
+      .upsert(payload, { onConflict: "id" });
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
