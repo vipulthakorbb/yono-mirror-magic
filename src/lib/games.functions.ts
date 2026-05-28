@@ -11,6 +11,17 @@ export type GameRow = {
   content: string;
   position: number;
   source_url?: string | null;
+  meta_title?: string | null;
+  meta_description?: string | null;
+};
+
+export type SiteSettings = {
+  meta_title: string | null;
+  meta_description: string | null;
+  meta_keywords: string | null;
+  section_title: string | null;
+  section_content: string | null;
+  section_image: string | null;
 };
 
 // Aggressive edge caching: serve from Cloudflare's cache so the DB is barely
@@ -38,7 +49,7 @@ export const listGames = createServerFn({ method: "GET" }).handler(async () => {
   setEdgeCache(300, 86400);
   const { data, error } = await supabaseAdmin
     .from("games")
-    .select("id, slug, title, img, content, position, source_url")
+    .select("id, slug, title, img, content, position, source_url, meta_title, meta_description")
     .order("position", { ascending: true })
     .limit(500);
   if (error) throw new Error(error.message);
@@ -53,7 +64,7 @@ export const getGameBySlug = createServerFn({ method: "GET" })
     setEdgeCache(600, 86400);
     const { data: game, error } = await supabaseAdmin
       .from("games")
-      .select("id, slug, title, img, content, position, source_url")
+      .select("id, slug, title, img, content, position, source_url, meta_title, meta_description")
       .eq("slug", data.slug)
       .maybeSingle();
     if (error) throw new Error(error.message);
@@ -72,3 +83,21 @@ export const getGameBySlug = createServerFn({ method: "GET" })
 
     return { game: game as GameRow, related };
   });
+
+export const getSiteSettings = createServerFn({ method: "GET" }).handler(async () => {
+  setEdgeCache(300, 86400);
+  const { data, error } = await supabaseAdmin
+    .from("site_settings")
+    .select("meta_title, meta_description, meta_keywords, section_title, section_content, section_image")
+    .eq("id", true)
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  return (data ?? {
+    meta_title: null,
+    meta_description: null,
+    meta_keywords: null,
+    section_title: null,
+    section_content: null,
+    section_image: null,
+  }) as SiteSettings;
+});

@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { SiteLayout } from "@/components/SiteLayout";
-import { listGames } from "@/lib/games.functions";
+import { listGames, getSiteSettings } from "@/lib/games.functions";
 import { cdnImg } from "@/lib/cdn";
 import { useEffect, useState } from "react";
 
@@ -10,28 +10,40 @@ const gamesQueryOptions = queryOptions({
   queryFn: () => listGames(),
 });
 
+const siteSettingsQueryOptions = queryOptions({
+  queryKey: ["site-settings"],
+  queryFn: () => getSiteSettings(),
+});
+
+const DEFAULT_META = {
+  title: "Yono Rummy APK & Yono Games Download — Free Signup Bonus | RoyalYono",
+  description:
+    "Download Yono Rummy APK, all Yono Games, Yono Arcade, Teen Patti Master & Rummy Noble with free signup bonus. Honest reviews & official links.",
+  keywords:
+    "yono rummy, yono rummy apk, yono rummy download, yono games, yono games download, yono game, yono all game, yono app, yono apk, yono arcade, yono 777, yono slots, yono vip, royal yono, royalyono, teen patti master, teen patti gold, rummy noble, rummy wealth, rummy nabob, rummy mars, 777 games, jalwa game, spin 101, jili games",
+};
+
 export const Route = createFileRoute("/")({
-  loader: ({ context }) => context.queryClient.ensureQueryData(gamesQueryOptions),
+  loader: async ({ context }) => {
+    const [, settings] = await Promise.all([
+      context.queryClient.ensureQueryData(gamesQueryOptions),
+      context.queryClient.ensureQueryData(siteSettingsQueryOptions),
+    ]);
+    return { settings };
+  },
   component: Index,
-  head: () => ({
+  head: ({ loaderData }) => {
+    const s = loaderData?.settings;
+    const title = (s?.meta_title?.trim() || DEFAULT_META.title);
+    const description = (s?.meta_description?.trim() || DEFAULT_META.description);
+    const keywords = (s?.meta_keywords?.trim() || DEFAULT_META.keywords);
+    return {
     meta: [
-      { title: "Yono Rummy APK & Yono Games Download — Free Signup Bonus | RoyalYono" },
-      {
-        name: "description",
-        content:
-          "Download Yono Rummy APK, all Yono Games, Yono Arcade, Teen Patti Master & Rummy Noble with free signup bonus. Honest reviews & official links.",
-      },
-      {
-        name: "keywords",
-        content:
-          "yono rummy, yono rummy apk, yono rummy download, yono games, yono games download, yono game, yono all game, yono app, yono apk, yono arcade, yono 777, yono slots, yono vip, royal yono, royalyono, teen patti master, teen patti gold, rummy noble, rummy wealth, rummy nabob, rummy mars, 777 games, jalwa game, spin 101, jili games",
-      },
-      { property: "og:title", content: "Yono Rummy APK & Yono Games Download — RoyalYono" },
-      {
-        property: "og:description",
-        content:
-          "Download Yono Rummy APK, all Yono Games & Teen Patti bonus apps. Free signup bonus, honest reviews, official APK links.",
-      },
+      { title },
+      { name: "description", content: description },
+      { name: "keywords", content: keywords },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://royalyono.com/" },
     ],
@@ -56,11 +68,13 @@ export const Route = createFileRoute("/")({
         }),
       },
     ],
-  }),
+    };
+  },
 });
 
 function Index() {
   const { data: GAMES } = useSuspenseQuery(gamesQueryOptions);
+  const { data: settings } = useSuspenseQuery(siteSettingsQueryOptions);
   const INITIAL = 20;
   const [visible, setVisible] = useState(INITIAL);
 
@@ -119,6 +133,29 @@ function Index() {
         </div>
         {visible < GAMES.length && (
           <div className="ry-loader">Loading more games…</div>
+        )}
+
+        {(settings?.section_title || settings?.section_content || settings?.section_image) && (
+          <section className="ry-content-area">
+            {settings.section_title && <h2>{settings.section_title}</h2>}
+            {settings.section_image && (
+              <img
+                src={settings.section_image}
+                alt={settings.section_title || "Section image"}
+                style={{
+                  maxWidth: "100%",
+                  height: "auto",
+                  borderRadius: 12,
+                  margin: "12px 0",
+                }}
+                loading="lazy"
+                decoding="async"
+              />
+            )}
+            {settings.section_content && (
+              <div dangerouslySetInnerHTML={{ __html: settings.section_content }} />
+            )}
+          </section>
         )}
 
         <section className="ry-content-area">

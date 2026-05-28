@@ -20,6 +20,8 @@ export type Database = {
           created_at: string
           id: string
           img: string
+          meta_description: string | null
+          meta_title: string | null
           position: number
           slug: string
           source_url: string | null
@@ -31,6 +33,8 @@ export type Database = {
           created_at?: string
           id?: string
           img: string
+          meta_description?: string | null
+          meta_title?: string | null
           position?: number
           slug: string
           source_url?: string | null
@@ -42,10 +46,45 @@ export type Database = {
           created_at?: string
           id?: string
           img?: string
+          meta_description?: string | null
+          meta_title?: string | null
           position?: number
           slug?: string
           source_url?: string | null
           title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      site_settings: {
+        Row: {
+          id: boolean
+          meta_description: string | null
+          meta_keywords: string | null
+          meta_title: string | null
+          section_content: string | null
+          section_image: string | null
+          section_title: string | null
+          updated_at: string
+        }
+        Insert: {
+          id?: boolean
+          meta_description?: string | null
+          meta_keywords?: string | null
+          meta_title?: string | null
+          section_content?: string | null
+          section_image?: string | null
+          section_title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          id?: boolean
+          meta_description?: string | null
+          meta_keywords?: string | null
+          meta_title?: string | null
+          section_content?: string | null
+          section_image?: string | null
+          section_title?: string | null
           updated_at?: string
         }
         Relationships: []

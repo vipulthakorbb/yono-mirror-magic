@@ -20,9 +20,12 @@ export const Route = createFileRoute("/games/$slug")({
   },
   head: ({ loaderData }) => {
     const g = loaderData?.game;
-    const title = g ? `${g.title} — RoyalYono` : "Game — RoyalYono";
+    const title = g
+      ? (g.meta_title?.trim() || `${g.title} — RoyalYono`)
+      : "Game — RoyalYono";
     const desc = g
-      ? `${g.title}. Read the full review, claim the signup bonus and download the official APK on RoyalYono.`
+      ? (g.meta_description?.trim() ||
+          `${g.title}. Read the full review, claim the signup bonus and download the official APK on RoyalYono.`)
       : "Game review on RoyalYono.";
     const url = g ? `https://royalyono.com/games/${g.slug}` : undefined;
     return {
