@@ -100,6 +100,8 @@ const GameInput = z.object({
   content: z.string().max(500000).default(""),
   position: z.number().int().min(0).max(100000).optional(),
   source_url: z.string().trim().url().max(2000).optional().or(z.literal("")),
+  meta_title: z.string().trim().max(300).optional().or(z.literal("")),
+  meta_description: z.string().trim().max(500).optional().or(z.literal("")),
 });
 
 async function assertAdmin(userId: string) {
@@ -188,6 +190,8 @@ export const adminCreateGame = createServerFn({ method: "POST" })
         content,
         source_url: data.source_url || null,
         position,
+        meta_title: data.meta_title || null,
+        meta_description: data.meta_description || null,
       })
       .select("id, slug")
       .single();
@@ -214,6 +218,8 @@ export const adminUpdateGame = createServerFn({ method: "POST" })
       content?: string;
       position?: number;
       source_url?: string | null;
+      meta_title?: string | null;
+      meta_description?: string | null;
     } = {};
     if (rest.title !== undefined) patch.title = rest.title;
     if (rest.slug !== undefined) patch.slug = rest.slug;
@@ -221,6 +227,8 @@ export const adminUpdateGame = createServerFn({ method: "POST" })
     if (rest.source_url !== undefined) {
       patch.source_url = rest.source_url || null;
     }
+    if (rest.meta_title !== undefined) patch.meta_title = rest.meta_title || null;
+    if (rest.meta_description !== undefined) patch.meta_description = rest.meta_description || null;
     if (rest.img) patch.img = rest.img;
     // If admin typed a description, use it. If they cleared it (empty string)
     // or didn't touch it but changed the title/link, auto-regenerate so the
@@ -293,7 +301,7 @@ export const adminGetGame = createServerFn({ method: "GET" })
     await assertAdmin(userId);
     const { data: row, error } = await supabaseAdmin
       .from("games")
-      .select("id, slug, title, img, content, position, source_url")
+      .select("id, slug, title, img, content, position, source_url, meta_title, meta_description")
       .eq("id", data.id)
       .single();
     if (error) throw new Error(error.message);
