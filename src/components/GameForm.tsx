@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 export type GameFormValues = {
@@ -7,6 +7,8 @@ export type GameFormValues = {
   img: string;
   content?: string;
   source_url?: string;
+  meta_title?: string;
+  meta_description?: string;
 };
 
 type Props = {
@@ -21,10 +23,14 @@ export function GameForm({ initial, submitLabel, onSubmit }: Props) {
   const [img, setImg] = useState(initial?.img ?? "");
   const [sourceUrl, setSourceUrl] = useState(initial?.source_url ?? "");
   const [description, setDescription] = useState(initial?.content ?? "");
+  const [metaTitle, setMetaTitle] = useState(initial?.meta_title ?? "");
+  const [metaDescription, setMetaDescription] = useState(initial?.meta_description ?? "");
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState("");
+  const [insertingImg, setInsertingImg] = useState(false);
+  const descRef = useRef<HTMLTextAreaElement | null>(null);
 
   const upload = useCallback(async (file: File) => {
     if (!file.type.startsWith("image/")) {
@@ -49,6 +55,42 @@ export function GameForm({ initial, submitLabel, onSubmit }: Props) {
     }
   }, []);
 
+  const uploadInline = useCallback(async (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      setErr("Please choose an image file.");
+      return;
+    }
+    setErr("");
+    setInsertingImg(true);
+    try {
+      const ext = (file.name.split(".").pop() || "png").toLowerCase();
+      const path = `content/${crypto.randomUUID()}.${ext}`;
+      const { error } = await supabase.storage
+        .from("game-icons")
+        .upload(path, file, { upsert: false, contentType: file.type });
+      if (error) throw error;
+      const { data } = supabase.storage.from("game-icons").getPublicUrl(path);
+      const html = `<img src="${data.publicUrl}" alt="" style="max-width:100%;height:auto;border-radius:8px;margin:12px 0;" />`;
+      const ta = descRef.current;
+      if (ta) {
+        const start = ta.selectionStart ?? description.length;
+        const end = ta.selectionEnd ?? description.length;
+        const next = description.slice(0, start) + html + description.slice(end);
+        setDescription(next);
+        setTimeout(() => {
+          ta.focus();
+          ta.selectionStart = ta.selectionEnd = start + html.length;
+        }, 0);
+      } else {
+        setDescription((d) => d + html);
+      }
+    } catch (e) {
+      setErr((e as Error).message);
+    } finally {
+      setInsertingImg(false);
+    }
+  }, [description]);
+
   const onDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setDragOver(false);
@@ -71,6 +113,8 @@ export function GameForm({ initial, submitLabel, onSubmit }: Props) {
         img,
         source_url: sourceUrl.trim() || undefined,
         content: description,
+        meta_title: metaTitle.trim() || undefined,
+        meta_description: metaDescription.trim() || undefined,
       });
     } catch (e) {
       setErr((e as Error).message);
@@ -176,17 +220,64 @@ export function GameForm({ initial, submitLabel, onSubmit }: Props) {
           Description
           <span className="font-normal text-gray-500"> (optional — auto-generated if blank)</span>
         </label>
+        <div className="mb-2 flex items-center gap-2">
+          <label className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-blue-600 px-3 py-1 text-xs font-semibold text-blue-600 hover:bg-blue-50">
+            {insertingImg ? "Uploading…" : "🖼  Insert image"}
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) uploadInline(f);
+                e.target.value = "";
+              }}
+            />
+          </label>
+          <span className="text-xs text-gray-500">
+            Uploads an image and inserts an &lt;img&gt; tag at the cursor.
+          </span>
+        </div>
         <textarea
+          ref={descRef}
           className="w-full rounded-md border px-3 py-2 text-sm"
-          rows={8}
+          rows={12}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Leave blank — we'll auto-write a review using the game name + bonus amount from the title and add a DOWNLOAD button using your game link."
         />
         <p className="mt-1 text-xs text-gray-500">
-          Leave blank to auto-generate from the title (bonus amount is detected automatically) and the game link.
+          Supports HTML. Leave blank to auto-generate from the title and game link.
         </p>
       </div>
+      <fieldset className="rounded-lg border border-gray-200 p-4">
+        <legend className="px-2 text-sm font-semibold text-gray-700">SEO / &lt;head&gt; meta</legend>
+        <div>
+          <label className="mb-1 block text-sm font-semibold">
+            Meta title <span className="font-normal text-gray-500">(browser tab + search results, ≤60 chars)</span>
+          </label>
+          <input
+            maxLength={300}
+            className="w-full rounded-md border px-3 py-2 text-sm"
+            value={metaTitle}
+            onChange={(e) => setMetaTitle(e.target.value)}
+            placeholder="Leave blank to use the game title"
+          />
+        </div>
+        <div className="mt-3">
+          <label className="mb-1 block text-sm font-semibold">
+            Meta description <span className="font-normal text-gray-500">(≤160 chars recommended)</span>
+          </label>
+          <textarea
+            maxLength={500}
+            rows={3}
+            className="w-full rounded-md border px-3 py-2 text-sm"
+            value={metaDescription}
+            onChange={(e) => setMetaDescription(e.target.value)}
+            placeholder="Short summary shown in Google results. Leave blank for a default."
+          />
+        </div>
+      </fieldset>
       {err && <p className="text-sm text-red-600">{err}</p>}
       <button
         type="submit"
