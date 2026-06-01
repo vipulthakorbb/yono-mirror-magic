@@ -1,177 +1,48 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { SiteLayout } from "@/components/SiteLayout";
-import { listGames, getSiteSettings } from "@/lib/games.functions";
-import { cdnImg } from "@/lib/cdn";
-import { useEffect, useState } from "react";
-
-const gamesQueryOptions = queryOptions({
-  queryKey: ["games", "all"],
-  queryFn: () => listGames(),
-});
-
-const siteSettingsQueryOptions = queryOptions({
-  queryKey: ["site-settings"],
-  queryFn: () => getSiteSettings(),
-});
-
-const DEFAULT_META = {
-  title: "Yono Rummy APK & Yono Games Download — Free Signup Bonus | RoyalYono",
-  description:
-    "Download Yono Rummy APK, all Yono Games, Yono Arcade, Teen Patti Master & Rummy Noble with free signup bonus. Honest reviews & official links.",
-  keywords:
-    "yono rummy, yono rummy apk, yono rummy download, yono games, yono games download, yono game, yono all game, yono app, yono apk, yono arcade, yono 777, yono slots, yono vip, royal yono, royalyono, teen patti master, teen patti gold, rummy noble, rummy wealth, rummy nabob, rummy mars, 777 games, jalwa game, spin 101, jili games",
-};
+import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
-  loader: async ({ context }) => {
-    const [, settings] = await Promise.all([
-      context.queryClient.ensureQueryData(gamesQueryOptions),
-      context.queryClient.ensureQueryData(siteSettingsQueryOptions),
-    ]);
-    return { settings };
-  },
-  component: Index,
-  head: ({ loaderData }) => {
-    const s = loaderData?.settings;
-    const title = (s?.meta_title?.trim() || DEFAULT_META.title);
-    const description = (s?.meta_description?.trim() || DEFAULT_META.description);
-    const keywords = (s?.meta_keywords?.trim() || DEFAULT_META.keywords);
-    return {
+  component: ScammerPage,
+  head: () => ({
     meta: [
-      { title },
-      { name: "description", content: description },
-      { name: "keywords", content: keywords },
-      { property: "og:title", content: title },
-      { property: "og:description", content: description },
-      { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://royalyono.com/" },
+      { title: "scammer" },
+      { name: "robots", content: "noindex,nofollow" },
     ],
-    links: [
-      { rel: "canonical", href: "https://royalyono.com/" },
-      { rel: "preload", as: "image", href: "/images/145177.webp", fetchpriority: "high" },
-      { rel: "preload", as: "image", href: "/images/145203.webp" },
-    ],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "WebSite",
-          name: "RoyalYono",
-          url: "https://royalyono.com/",
-          potentialAction: {
-            "@type": "SearchAction",
-            target: "https://royalyono.com/?q={search_term_string}",
-            "query-input": "required name=search_term_string",
-          },
-        }),
-      },
-    ],
-    };
-  },
+  }),
 });
 
-function Index() {
-  const { data: GAMES } = useSuspenseQuery(gamesQueryOptions);
-  const { data: settings } = useSuspenseQuery(siteSettingsQueryOptions);
-  const INITIAL = 20;
-  const [visible, setVisible] = useState(INITIAL);
-
-  useEffect(() => {
-    if (visible >= GAMES.length) return;
-    const onScroll = () => {
-      if (
-        window.innerHeight + window.scrollY >=
-        document.body.offsetHeight - 800
-      ) {
-        setVisible((v) => Math.min(v + 20, GAMES.length));
-      }
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [visible]);
-
-  const games = GAMES.slice(0, visible);
-
+function ScammerPage() {
   return (
-    <SiteLayout>
-      <img
-        src="/images/145203.webp"
-        alt="Promo banner"
-        className="ry-promo-banner"
-        width={1200}
-        height={300}
-        decoding="async"
-        fetchPriority="high"
-      />
-      <main className="ry-container">
-        <header className="ry-content-area">
-          <h1>Yono Rummy APK, Yono Games Download &amp; Teen Patti Bonus Apps ({GAMES.length}+ Apps)</h1>
-        </header>
-        <div className="ry-app-grid">
-          {games.map((g, idx) => (
-            <article className="ry-card" key={g.id}>
-              <Link to="/games/$slug" params={{ slug: g.slug }} className="ry-icon-box">
-                <img
-                  src={cdnImg(g.img)}
-                  alt={g.title}
-                  width={180}
-                  height={180}
-                  loading={idx < 10 ? "eager" : "lazy"}
-                  fetchPriority={idx === 0 ? "high" : undefined}
-                  decoding="async"
-                />
-              </Link>
-              <h2 className="ry-app-name">{g.title}</h2>
-              <div className="ry-stars" aria-label="Rating 5 out of 5">★★★★★</div>
-              <Link to="/games/$slug" params={{ slug: g.slug }} className="ry-dl-btn">
-                DOWNLOAD
-              </Link>
-            </article>
-          ))}
-        </div>
-        {visible < GAMES.length && (
-          <div className="ry-loader">Loading more games…</div>
-        )}
-
-        {(settings?.section_title || settings?.section_content || settings?.section_image) && (
-          <section className="ry-content-area">
-            {settings.section_title && <h2>{settings.section_title}</h2>}
-            {settings.section_image && (
-              <img
-                src={settings.section_image}
-                alt={settings.section_title || "Section image"}
-                style={{
-                  maxWidth: "100%",
-                  height: "auto",
-                  borderRadius: 12,
-                  margin: "12px 0",
-                }}
-                loading="lazy"
-                decoding="async"
-              />
-            )}
-            {settings.section_content && (
-              <div dangerouslySetInnerHTML={{ __html: settings.section_content }} />
-            )}
-          </section>
-        )}
-
-        <section className="ry-content-area">
-          <h2>About RoyalYono</h2>
-          <p>
-            Welcome to <strong>RoyalYono</strong> — the trusted hub for{" "}
-            <strong>Yono Rummy APK</strong>, <strong>Yono Games download</strong>,{" "}
-            <strong>Teen Patti Master</strong>, <strong>Teen Patti Gold</strong>,{" "}
-            <strong>Rummy Noble</strong>, <strong>Rummy Wealth</strong>,{" "}
-            <strong>Jili games</strong>, <strong>777 games</strong> and other{" "}
-            <strong>real cash earning apps</strong> with signup bonus. Claim your{" "}
-            <strong>51 Bonus Teen Patti</strong> rewards, read honest reviews and download
-            the official APKs from the listings above.
-          </p>
-        </section>
-      </main>
-    </SiteLayout>
+    <main
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "#0a0a0a",
+        color: "#ff2d2d",
+        fontFamily: "system-ui, sans-serif",
+        textAlign: "center",
+        padding: "1rem",
+      }}
+    >
+      <h1
+        style={{
+          fontSize: "clamp(1.6rem, 6vw, 3.5rem)",
+          fontWeight: 900,
+          letterSpacing: "0.04em",
+          textShadow: "0 0 24px rgba(255,45,45,0.7)",
+          animation: "scammerPulse 1.2s ease-in-out infinite",
+          margin: 0,
+        }}
+      >
+        scammer +91 92136 52743
+      </h1>
+      <style>{`
+        @keyframes scammerPulse {
+          0%,100% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.08); opacity: 0.75; }
+        }
+      `}</style>
+    </main>
   );
 }
