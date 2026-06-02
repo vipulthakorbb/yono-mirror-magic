@@ -15,7 +15,7 @@ export function cdnImg(url: string | null | undefined): string {
   if (!SUPA) return url;
   const prefix = `${SUPA}/storage/v1/object/public/`;
   if (url.startsWith(prefix)) {
-    return `/api/img/${url.slice(prefix.length)}`;
+    return `/api/public/img/${url.slice(prefix.length)}`;
   }
   return url;
 }
