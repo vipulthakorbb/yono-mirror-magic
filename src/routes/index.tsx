@@ -101,7 +101,7 @@ function Index() {
         alt="Promo banner"
         className="ry-promo-banner"
         width={1200}
-        height={600}
+        height={300}
         decoding="async"
         fetchPriority="high"
       />

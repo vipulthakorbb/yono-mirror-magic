@@ -1,14 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-// Edge-cached public image proxy. Game icons live in Supabase Storage; routing
-// them through this Worker lets Cloudflare cache the bytes for a full year
+// Edge-cached image proxy. Game icons live in Supabase Storage; routing them
+// through this Worker lets Cloudflare cache the bytes for a full year
 // (immutable) so billions of repeat views never touch Supabase egress.
 //
-// Lives under /api/public/ so it bypasses the preview auth bridge — these
-// images are public assets. We still only allow proxying from this project's
-// Supabase storage host (SSRF protection).
+// Usage on the client: <img src="/img/game-icons/abc.png" />
+// We only allow proxying from this project's Supabase storage host — never
+// arbitrary URLs (SSRF protection).
 
-export const Route = createFileRoute("/api/public/img/$")({
+export const Route = createFileRoute("/api/img/$")({
   server: {
     handlers: {
       GET: async ({ params }) => {
@@ -23,6 +23,8 @@ export const Route = createFileRoute("/api/public/img/$")({
         if (!base) return new Response("Misconfigured", { status: 500 });
 
         const upstream = `${base.replace(/\/$/, "")}/storage/v1/object/public/${path}`;
+        // `cf` is a Cloudflare Workers extension to fetch — types don't know
+        // about it, so we cast through unknown.
         const res = await fetch(upstream, {
           cf: { cacheTtl: 31536000, cacheEverything: true },
         } as unknown as RequestInit);
