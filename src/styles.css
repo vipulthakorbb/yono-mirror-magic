@@ -281,10 +281,10 @@
   .ry-app-grid { grid-template-columns: repeat(3, 1fr); }
 }
 @media (max-width: 768px) {
-  .ry-app-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 8px; }
+  .ry-app-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 8px; }
 }
 @media (max-width: 480px) {
-  .ry-app-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 6px; }
+  .ry-app-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 6px; }
   .ry-card { padding: 6px; }
   .ry-app-name { font-size: 12px !important; min-height: 36px; line-height: 1.25; margin: 6px 0 4px; }
   .ry-dl-btn { font-size: 12px !important; padding: 7px 0 !important; }
