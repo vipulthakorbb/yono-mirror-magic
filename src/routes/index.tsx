@@ -4,6 +4,7 @@ import { SiteLayout } from "@/components/SiteLayout";
 import { listGames, getSiteSettings } from "@/lib/games.functions";
 import { cdnImg } from "@/lib/cdn";
 import { useEffect, useState } from "react";
+import bannerWave from "@/assets/banner-wave.jpeg.asset.json";
 
 const gamesQueryOptions = queryOptions({
   queryKey: ["games", "all"],
@@ -96,18 +97,37 @@ function Index() {
 
   return (
     <SiteLayout>
-      <img
-        src="/images/145203.webp"
-        alt="Promo banner"
-        className="ry-promo-banner"
-        width={1200}
-        height={300}
-        decoding="async"
-        fetchPriority="high"
-      />
+      <section className="ry-hero">
+        <img
+          src={bannerWave.url}
+          alt="RoyalYono — Yono Games & Rummy APK hub"
+          className="ry-hero-bg"
+          decoding="async"
+          fetchPriority="high"
+        />
+        <div className="ry-hero-overlay" />
+        <div className="ry-hero-content">
+          <h1 className="ry-hero-title">
+            Yono Games 2026 — Yono Rummy APK Download &amp; ₹500 Bonus
+          </h1>
+          <p className="ry-hero-sub">
+            All Yono Rummy, Yono Slots &amp; Teen Patti APK List
+          </p>
+          <p className="ry-hero-meta">
+            {GAMES.length}+ verified Yono game APKs · Real signup bonus ₹50–₹500 · Updated daily
+          </p>
+          <p className="ry-hero-desc">
+            <strong>RoyalYono</strong> is India's most updated hub for{" "}
+            <strong>Yono Rummy APK</strong>, <strong>Yono Slots</strong>,{" "}
+            <strong>Teen Patti</strong> and the full <strong>Yono games list 2026</strong>.
+            Every Yono APK on this page is scanned, tested, and updated weekly so you always
+            download the latest working version — no Play Store needed.
+          </p>
+        </div>
+      </section>
       <main className="ry-container">
         <header className="ry-content-area">
-          <h1>Yono Rummy APK, Yono Games Download &amp; Teen Patti Bonus Apps ({GAMES.length}+ Apps)</h1>
+          <h2>Yono Rummy APK, Yono Games Download &amp; Teen Patti Bonus Apps ({GAMES.length}+ Apps)</h2>
         </header>
         <div className="ry-app-grid">
           {games.map((g, idx) => (
