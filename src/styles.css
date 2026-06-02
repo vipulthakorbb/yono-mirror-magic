@@ -206,6 +206,20 @@
 @keyframes ryMoveGlow { 0% { left: -100%; } 100% { left: 100%; } }
 
 .ry-promo-banner { width: 100%; height: auto; display: block; }
+.ry-promo-banner {
+  width: 100%;
+  height: auto;
+  min-height: 320px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+@media (min-width: 768px) {
+  .ry-promo-banner { min-height: 480px; }
+}
+@media (min-width: 1200px) {
+  .ry-promo-banner { min-height: 600px; }
+}
 
 /* Grid */
 .ry-container { max-width: 1200px; margin: 0 auto; }
