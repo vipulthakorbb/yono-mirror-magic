@@ -275,8 +275,27 @@
   background: #fff; padding: 20px; border-radius: 15px;
   border: 1px solid var(--ry-border); margin: 10px;
 }
-.ry-content-area h1 { font-size: 22px; margin-bottom: 15px; }
-.ry-content-area p { font-size: 14px; line-height: 1.6; color: #444; }
+.ry-content-area h1 {
+  font-size: clamp(20px, 5vw, 30px);
+  font-weight: 900;
+  line-height: 1.25;
+  margin: 0 0 14px;
+  color: var(--ry-text);
+  letter-spacing: -0.01em;
+  text-align: center;
+  position: relative;
+  padding-bottom: 14px;
+}
+.ry-content-area h1::after {
+  content: "";
+  display: block;
+  width: 64px;
+  height: 4px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #ff9100, #e53935);
+  margin: 12px auto 0;
+}
+.ry-content-area p { font-size: 14px; line-height: 1.7; color: #444; }
 
 /* Footer */
 .ry-footer {
