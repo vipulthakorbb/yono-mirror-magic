@@ -23,7 +23,7 @@ import { Route as GamesSlugRouteImport } from './routes/games.$slug'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminNewRouteImport } from './routes/admin.new'
 import { Route as AdminIdRouteImport } from './routes/admin.$id'
-import { Route as ApiImgSplatRouteImport } from './routes/api/img.$'
+import { Route as ApiPublicImgSplatRouteImport } from './routes/api/public/img.$'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -95,9 +95,9 @@ const AdminIdRoute = AdminIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AdminRoute,
 } as any)
-const ApiImgSplatRoute = ApiImgSplatRouteImport.update({
-  id: '/api/img/$',
-  path: '/api/img/$',
+const ApiPublicImgSplatRoute = ApiPublicImgSplatRouteImport.update({
+  id: '/api/public/img/$',
+  path: '/api/public/img/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -116,7 +116,7 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AdminSettingsRoute
   '/games/$slug': typeof GamesSlugRoute
   '/admin/': typeof AdminIndexRoute
-  '/api/img/$': typeof ApiImgSplatRoute
+  '/api/public/img/$': typeof ApiPublicImgSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -132,7 +132,7 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AdminSettingsRoute
   '/games/$slug': typeof GamesSlugRoute
   '/admin': typeof AdminIndexRoute
-  '/api/img/$': typeof ApiImgSplatRoute
+  '/api/public/img/$': typeof ApiPublicImgSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -150,7 +150,7 @@ export interface FileRoutesById {
   '/admin/settings': typeof AdminSettingsRoute
   '/games/$slug': typeof GamesSlugRoute
   '/admin/': typeof AdminIndexRoute
-  '/api/img/$': typeof ApiImgSplatRoute
+  '/api/public/img/$': typeof ApiPublicImgSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -169,7 +169,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/games/$slug'
     | '/admin/'
-    | '/api/img/$'
+    | '/api/public/img/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -185,7 +185,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/games/$slug'
     | '/admin'
-    | '/api/img/$'
+    | '/api/public/img/$'
   id:
     | '__root__'
     | '/'
@@ -202,7 +202,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/games/$slug'
     | '/admin/'
-    | '/api/img/$'
+    | '/api/public/img/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -216,7 +216,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
   GamesSlugRoute: typeof GamesSlugRoute
-  ApiImgSplatRoute: typeof ApiImgSplatRoute
+  ApiPublicImgSplatRoute: typeof ApiPublicImgSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -319,11 +319,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIdRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/api/img/$': {
-      id: '/api/img/$'
-      path: '/api/img/$'
-      fullPath: '/api/img/$'
-      preLoaderRoute: typeof ApiImgSplatRouteImport
+    '/api/public/img/$': {
+      id: '/api/public/img/$'
+      path: '/api/public/img/$'
+      fullPath: '/api/public/img/$'
+      preLoaderRoute: typeof ApiPublicImgSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -356,7 +356,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
   GamesSlugRoute: GamesSlugRoute,
-  ApiImgSplatRoute: ApiImgSplatRoute,
+  ApiPublicImgSplatRoute: ApiPublicImgSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
