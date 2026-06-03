@@ -123,6 +123,20 @@ function Index() {
             Every Yono APK on this page is scanned, tested, and updated weekly so you always
             download the latest working version — no Play Store needed.
           </p>
+          <form action="/search" method="get" className="ry-hero-search" role="search">
+            <input
+              type="text"
+              name="q"
+              aria-label="Search Yono games"
+              placeholder="Yono Games App search"
+            />
+            <button type="submit" aria-label="Search">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="7" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </button>
+          </form>
         </div>
       </section>
       <main className="ry-container">
