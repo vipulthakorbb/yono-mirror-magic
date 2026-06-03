@@ -269,6 +269,42 @@
 }
 .ry-hero-desc strong { color: #ffea00; }
 
+/* Hero search bar */
+.ry-hero-search {
+  display: flex;
+  width: 100%;
+  max-width: 640px;
+  margin: 26px auto 0;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 6px 24px rgba(0,0,0,.35);
+}
+.ry-hero-search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: #fff;
+  color: #111;
+  font-size: 16px;
+  padding: 16px 18px;
+  font-family: inherit;
+}
+.ry-hero-search input::placeholder { color: #8a8a8a; }
+.ry-hero-search button {
+  border: none;
+  background: #15b8a6;
+  color: #fff;
+  padding: 0 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background .2s ease;
+}
+.ry-hero-search button:hover { background: #0f9488; }
+
 /* Grid */
 .ry-container { max-width: 1200px; margin: 0 auto; }
 .ry-app-grid {
