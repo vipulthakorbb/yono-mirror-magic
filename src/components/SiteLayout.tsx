@@ -89,13 +89,32 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       {children}
 
       <footer className="ry-footer">
-        <div className="ry-footer-links">
-          <Link to="/about">About Us</Link> |{" "}
-          <Link to="/privacy-policy">Privacy Policy</Link> |{" "}
-          <Link to="/disclaimer">Disclaimer</Link> |{" "}
-          <Link to="/contact">Contact Us</Link>
+        <div className="ry-footer-grid">
+          <div className="ry-footer-col">
+            <h4 className="ry-footer-brand">Yono Game Ki Chahna</h4>
+            <p className="ry-footer-tagline">
+              Your hub for the latest Yono Rummy, Slots, and Teen Patti APKs with daily signup bonuses.
+            </p>
+          </div>
+          <div className="ry-footer-col">
+            <h5 className="ry-footer-heading">PAGES</h5>
+            <ul className="ry-footer-list">
+              <li><Link to="/">Home</Link></li>
+              <li><Link to="/about">About Us</Link></li>
+              <li><Link to="/contact">Contact Us</Link></li>
+            </ul>
+          </div>
+          <div className="ry-footer-col">
+            <h5 className="ry-footer-heading">LEGAL</h5>
+            <ul className="ry-footer-list">
+              <li><Link to="/disclaimer">Disclaimer</Link></li>
+              <li><Link to="/privacy-policy">Privacy Policy</Link></li>
+              <li><Link to="/terms">Terms &amp; Conditions</Link></li>
+              <li><Link to="/responsible-gaming">Responsible Gaming</Link></li>
+            </ul>
+          </div>
         </div>
-        <div className="ry-copy">© 2026 RoyalYono | All Rights Reserved</div>
+        <div className="ry-copy">© 2026 Yono Game Ki Chahna. For 18+ users only. Play responsibly.</div>
       </footer>
 
       <nav className="ry-bottom-nav">

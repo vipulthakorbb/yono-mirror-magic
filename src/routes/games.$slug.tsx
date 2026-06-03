@@ -114,6 +114,17 @@ function GamePage() {
               <p className="ry-crumbs">
                 <Link to="/">Home</Link> &nbsp;›&nbsp; <span>Game Review</span>
               </p>
+              <div className="ry-game-meta">
+                <span className="ry-meta-item">
+                  <span className="ry-meta-icon" aria-hidden>★</span> 4.8 / 5
+                </span>
+                <span className="ry-meta-item">
+                  <span className="ry-meta-icon" aria-hidden>📱</span> Android · 25 MB
+                </span>
+                <span className="ry-meta-item">
+                  <span className="ry-meta-icon" aria-hidden>🛡</span> Verified APK
+                </span>
+              </div>
               {game.source_url ? (
                 <p style={{ marginTop: 12 }}>
                   <a
