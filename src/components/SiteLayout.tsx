@@ -91,9 +91,9 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       <footer className="ry-footer">
         <div className="ry-footer-grid">
           <div className="ry-footer-col">
-            <h4 className="ry-footer-brand">Yono Game Ki Chahna</h4>
+            <h4 className="ry-footer-brand">Royal Yono</h4>
             <p className="ry-footer-tagline">
-              Your hub for the latest Yono Rummy, Slots, and Teen Patti APKs with daily signup bonuses.
+              India's most trusted hub for Yono Rummy APK, Slots & Teen Patti with daily signup bonuses.
             </p>
           </div>
           <div className="ry-footer-col">
@@ -114,7 +114,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
             </ul>
           </div>
         </div>
-        <div className="ry-copy">© 2026 Yono Game Ki Chahna. For 18+ users only. Play responsibly.</div>
+        <div className="ry-copy">© 2026 Royal Yono. For 18+ users only. Play responsibly.</div>
       </footer>
 
       <nav className="ry-bottom-nav">
