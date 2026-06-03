@@ -95,6 +95,12 @@ function GamePage() {
   const related = data!.related;
   const html = game.content;
 
+  // Stable per-game pseudo-random rating (4.5–4.9) and size (20–80 MB)
+  let h = 0;
+  for (let i = 0; i < slug.length; i++) h = (h * 31 + slug.charCodeAt(i)) >>> 0;
+  const rating = (4.5 + ((h % 5) / 10)).toFixed(1); // 4.5, 4.6, 4.7, 4.8, 4.9
+  const sizeMb = 20 + ((h >> 3) % 61); // 20–80 MB
+
   return (
     <SiteLayout>
       <main className="ry-container">
@@ -116,10 +122,10 @@ function GamePage() {
               </p>
               <div className="ry-game-meta">
                 <span className="ry-meta-item">
-                  <span className="ry-meta-icon" aria-hidden>★</span> 4.8 / 5
+                  <span className="ry-meta-icon" aria-hidden>★</span> {rating} / 5
                 </span>
                 <span className="ry-meta-item">
-                  <span className="ry-meta-icon" aria-hidden>📱</span> Android · 25 MB
+                  <span className="ry-meta-icon" aria-hidden>📱</span> Android · {sizeMb} MB
                 </span>
                 <span className="ry-meta-item">
                   <span className="ry-meta-icon" aria-hidden>🛡</span> Verified APK
