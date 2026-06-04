@@ -195,7 +195,7 @@ function Index() {
             </article>
           ))}
         </div>
-        {visible < GAMES.length && (
+        {!q && visible < GAMES.length && (
           <div className="ry-loader">Loading more games…</div>
         )}
 
