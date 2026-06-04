@@ -162,8 +162,17 @@ function Index() {
       </section>
       <main className="ry-container">
         <header className="ry-content-area">
-          <h2>Yono Rummy APK, Yono Games Download &amp; Teen Patti Bonus Apps ({GAMES.length}+ Apps)</h2>
+          <h2>
+            {q
+              ? `Search results for "${query}" (${filtered.length})`
+              : `Yono Rummy APK, Yono Games Download & Teen Patti Bonus Apps (${GAMES.length}+ Apps)`}
+          </h2>
         </header>
+        {q && filtered.length === 0 && (
+          <p style={{ textAlign: "center", padding: "24px 0" }}>
+            No games found. Try a different search.
+          </p>
+        )}
         <div className="ry-app-grid">
           {games.map((g, idx) => (
             <article className="ry-card" key={g.id}>
