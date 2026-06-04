@@ -99,7 +99,7 @@ function GamePage() {
   let h = 0;
   for (let i = 0; i < slug.length; i++) h = (h * 31 + slug.charCodeAt(i)) >>> 0;
   const rating = (4.5 + ((h % 5) / 10)).toFixed(1); // 4.5, 4.6, 4.7, 4.8, 4.9
-  const sizeMb = 20 + ((h >> 3) % 61); // 20–80 MB
+  const sizeMb = 45 + ((h >> 3) % 136); // 45–180 MB
 
   return (
     <SiteLayout>

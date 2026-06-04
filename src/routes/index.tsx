@@ -78,6 +78,13 @@ function Index() {
   const { data: settings } = useSuspenseQuery(siteSettingsQueryOptions);
   const INITIAL = 20;
   const [visible, setVisible] = useState(INITIAL);
+  const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get("q");
+    if (q) setQuery(q);
+  }, []);
 
   useEffect(() => {
     if (visible >= GAMES.length) return;
@@ -93,7 +100,11 @@ function Index() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [visible]);
 
-  const games = GAMES.slice(0, visible);
+  const q = query.trim().toLowerCase();
+  const filtered = q
+    ? GAMES.filter((g) => g.title.toLowerCase().includes(q))
+    : GAMES;
+  const games = q ? filtered : filtered.slice(0, visible);
 
   return (
     <SiteLayout>
@@ -123,10 +134,20 @@ function Index() {
             Every Yono APK on this page is scanned, tested, and updated weekly so you always
             download the latest working version — no Play Store needed.
           </p>
-          <form action="/search" method="get" className="ry-hero-search" role="search">
+          <form
+            className="ry-hero-search"
+            role="search"
+            onSubmit={(e) => {
+              e.preventDefault();
+              const el = document.querySelector(".ry-app-grid");
+              if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+          >
             <input
               type="text"
               name="q"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
               aria-label="Search Yono games"
               placeholder="Yono Games App search"
             />
@@ -141,8 +162,17 @@ function Index() {
       </section>
       <main className="ry-container">
         <header className="ry-content-area">
-          <h2>Yono Rummy APK, Yono Games Download &amp; Teen Patti Bonus Apps ({GAMES.length}+ Apps)</h2>
+          <h2>
+            {q
+              ? `Search results for "${query}" (${filtered.length})`
+              : `Yono Rummy APK, Yono Games Download & Teen Patti Bonus Apps (${GAMES.length}+ Apps)`}
+          </h2>
         </header>
+        {q && filtered.length === 0 && (
+          <p style={{ textAlign: "center", padding: "24px 0" }}>
+            No games found. Try a different search.
+          </p>
+        )}
         <div className="ry-app-grid">
           {games.map((g, idx) => (
             <article className="ry-card" key={g.id}>
@@ -165,7 +195,7 @@ function Index() {
             </article>
           ))}
         </div>
-        {visible < GAMES.length && (
+        {!q && visible < GAMES.length && (
           <div className="ry-loader">Loading more games…</div>
         )}
 
