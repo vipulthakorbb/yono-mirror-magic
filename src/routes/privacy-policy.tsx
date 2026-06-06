@@ -5,6 +5,7 @@ export const Route = createFileRoute("/privacy-policy")({
   head: () => ({
     meta: [
       { title: "Privacy Policy — RoyalYono" },
+      { name: "robots", content: "noindex, follow" },
       {
         name: "description",
         content:
@@ -18,7 +19,7 @@ export const Route = createFileRoute("/privacy-policy")({
       },
       { property: "og:url", content: "https://royalyono.com/privacy-policy" },
     ],
-    links: [{ rel: "canonical", href: "https://royalyono.com/privacy-policy" }],
+    links: [],
   }),
   component: PrivacyPage,
 });

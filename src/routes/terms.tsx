@@ -5,6 +5,7 @@ export const Route = createFileRoute("/terms")({
   head: () => ({
     meta: [
       { title: "Terms and Conditions — RoyalYono" },
+      { name: "robots", content: "noindex, follow" },
       {
         name: "description",
         content:
@@ -17,7 +18,7 @@ export const Route = createFileRoute("/terms")({
       },
       { property: "og:url", content: "https://royalyono.com/terms" },
     ],
-    links: [{ rel: "canonical", href: "https://royalyono.com/terms" }],
+    links: [],
   }),
   component: TermsPage,
 });

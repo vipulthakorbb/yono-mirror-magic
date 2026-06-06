@@ -3,6 +3,7 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { SiteLayout } from "@/components/SiteLayout";
 import { getGameBySlug } from "@/lib/games.functions";
 import { cdnImg } from "@/lib/cdn";
+import { isGameSlugIndexable } from "@/lib/indexable";
 
 const gameQueryOptions = (slug: string) =>
   queryOptions({
@@ -28,10 +29,12 @@ export const Route = createFileRoute("/games/$slug")({
           `${g.title}. Read the full review, claim the signup bonus and download the official APK on RoyalYono.`)
       : "Game review on RoyalYono.";
     const url = g ? `https://royalyono.com/games/${g.slug}` : undefined;
+    const indexable = g ? isGameSlugIndexable(g.slug) : false;
     return {
       meta: [
         { title },
         { name: "description", content: desc },
+        { name: "robots", content: indexable ? "index, follow" : "noindex, follow" },
         { property: "og:title", content: title },
         { property: "og:description", content: desc },
         { property: "og:type", content: "article" },
@@ -39,7 +42,7 @@ export const Route = createFileRoute("/games/$slug")({
         ...(g?.img ? [{ property: "og:image", content: g.img }] : []),
         ...(g?.img ? [{ name: "twitter:image", content: g.img }] : []),
       ],
-      links: g ? [{ rel: "canonical", href: url! }] : [],
+      links: g && indexable ? [{ rel: "canonical", href: url! }] : [],
       scripts: g
         ? [
             {

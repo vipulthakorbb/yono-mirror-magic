@@ -5,6 +5,7 @@ export const Route = createFileRoute("/disclaimer")({
   head: () => ({
     meta: [
       { title: "Disclaimer — RoyalYono" },
+      { name: "robots", content: "noindex, follow" },
       {
         name: "description",
         content:
@@ -18,7 +19,7 @@ export const Route = createFileRoute("/disclaimer")({
       },
       { property: "og:url", content: "https://royalyono.com/disclaimer" },
     ],
-    links: [{ rel: "canonical", href: "https://royalyono.com/disclaimer" }],
+    links: [],
   }),
   component: DisclaimerPage,
 });
