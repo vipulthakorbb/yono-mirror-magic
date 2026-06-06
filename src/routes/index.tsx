@@ -4,7 +4,7 @@ import { SiteLayout } from "@/components/SiteLayout";
 import { listGames, getSiteSettings } from "@/lib/games.functions";
 import { cdnImg } from "@/lib/cdn";
 import { useEffect, useState } from "react";
-import bannerWave from "@/assets/banner-wave.jpeg.asset.json";
+import bannerWave from "@/assets/banner-wave.webp.asset.json";
 
 const gamesQueryOptions = queryOptions({
   queryKey: ["games", "all"],
@@ -51,7 +51,7 @@ export const Route = createFileRoute("/")({
     links: [
       { rel: "canonical", href: "https://royalyono.com/" },
       { rel: "preload", as: "image", href: "/images/145177.webp", fetchpriority: "high" },
-      { rel: "preload", as: "image", href: "/images/145203.webp" },
+      { rel: "preload", as: "image", href: bannerWave.url, fetchpriority: "high" },
     ],
     scripts: [
       {
@@ -178,7 +178,7 @@ function Index() {
             <article className="ry-card" key={g.id}>
               <Link to="/games/$slug" params={{ slug: g.slug }} className="ry-icon-box">
                 <img
-                  src={cdnImg(g.img)}
+                  src={cdnImg(g.img, 360)}
                   alt={g.title}
                   width={180}
                   height={180}

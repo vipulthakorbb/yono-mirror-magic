@@ -11,7 +11,7 @@ import { createFileRoute } from "@tanstack/react-router";
 export const Route = createFileRoute("/api/img/$")({
   server: {
     handlers: {
-      GET: async ({ params }) => {
+      GET: async ({ params, request }) => {
         const path = params._splat ?? "";
         if (!path || path.includes("..")) {
           return new Response("Bad path", { status: 400 });
@@ -23,11 +23,26 @@ export const Route = createFileRoute("/api/img/$")({
         if (!base) return new Response("Misconfigured", { status: 500 });
 
         const upstream = `${base.replace(/\/$/, "")}/storage/v1/object/public/${path}`;
-        // `cf` is a Cloudflare Workers extension to fetch — types don't know
-        // about it, so we cast through unknown.
-        const res = await fetch(upstream, {
-          cf: { cacheTtl: 31536000, cacheEverything: true },
-        } as unknown as RequestInit);
+        // Optional on-the-fly resize via Cloudflare Image Resizing.
+        // ?w=360&q=80 → cf.image { width: 360, quality: 80, format: "auto" }
+        // If Image Resizing isn't enabled on the zone, Cloudflare just
+        // serves the original bytes — same behaviour as before.
+        const u = new URL(request.url);
+        const w = Number(u.searchParams.get("w")) || 0;
+        const q = Number(u.searchParams.get("q")) || 80;
+        const cf: Record<string, unknown> = {
+          cacheTtl: 31536000,
+          cacheEverything: true,
+        };
+        if (w > 0 && w <= 2000) {
+          cf.image = {
+            width: w,
+            quality: q,
+            format: "auto",
+            fit: "cover",
+          };
+        }
+        const res = await fetch(upstream, { cf } as unknown as RequestInit);
         if (!res.ok) {
           return new Response("Upstream error", { status: res.status });
         }

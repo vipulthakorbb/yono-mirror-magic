@@ -107,7 +107,7 @@ function GamePage() {
         <article className="ry-game-page">
           <header className="ry-game-header">
             <img
-              src={cdnImg(game.img)}
+              src={cdnImg(game.img, 360)}
               alt={game.title}
               width={180}
               height={180}
@@ -166,7 +166,7 @@ function GamePage() {
               {related.map((g) => (
                 <article className="ry-card" key={g.slug}>
                   <Link to="/games/$slug" params={{ slug: g.slug }} className="ry-icon-box">
-                    <img src={cdnImg(g.img)} alt={g.title} width={180} height={180} loading="lazy" decoding="async" />
+                    <img src={cdnImg(g.img, 360)} alt={g.title} width={180} height={180} loading="lazy" decoding="async" />
                   </Link>
                   <h3 className="ry-app-name">{g.title}</h3>
                   <div className="ry-stars" aria-label="Rating 5 out of 5">★★★★★</div>

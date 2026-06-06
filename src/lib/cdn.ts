@@ -10,12 +10,16 @@ const SUPA = (import.meta.env.VITE_SUPABASE_URL as string | undefined)?.replace(
   "",
 );
 
-export function cdnImg(url: string | null | undefined): string {
+export function cdnImg(
+  url: string | null | undefined,
+  width?: number,
+): string {
   if (!url) return "";
   if (!SUPA) return url;
   const prefix = `${SUPA}/storage/v1/object/public/`;
   if (url.startsWith(prefix)) {
-    return `/api/img/${url.slice(prefix.length)}`;
+    const path = url.slice(prefix.length);
+    return width ? `/api/img/${path}?w=${width}&q=78` : `/api/img/${path}`;
   }
   return url;
 }
