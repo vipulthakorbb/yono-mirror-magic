@@ -5,6 +5,7 @@ export const Route = createFileRoute("/responsible-gaming")({
   head: () => ({
     meta: [
       { title: "Responsible Gaming — RoyalYono" },
+      { name: "robots", content: "noindex, follow" },
       {
         name: "description",
         content:
@@ -18,7 +19,7 @@ export const Route = createFileRoute("/responsible-gaming")({
       },
       { property: "og:url", content: "https://royalyono.com/responsible-gaming" },
     ],
-    links: [{ rel: "canonical", href: "https://royalyono.com/responsible-gaming" }],
+    links: [],
   }),
   component: ResponsiblePage,
 });

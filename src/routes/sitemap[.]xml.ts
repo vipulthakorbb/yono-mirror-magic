@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { INDEXABLE_GAME_SLUGS } from "@/lib/indexable";
 
 const BASE_URL = "https://royalyono.com";
 
@@ -15,15 +16,10 @@ export const Route = createFileRoute("/sitemap.xml")({
 
         const entries: Array<{ path: string; lastmod?: string; changefreq?: string; priority?: string }> = [
           { path: "/", changefreq: "daily", priority: "1.0" },
-          { path: "/about", changefreq: "monthly", priority: "0.6" },
-          { path: "/contact", changefreq: "monthly", priority: "0.6" },
-          { path: "/disclaimer", changefreq: "yearly", priority: "0.3" },
-          { path: "/privacy-policy", changefreq: "yearly", priority: "0.3" },
-          { path: "/responsible-gaming", changefreq: "yearly", priority: "0.4" },
-          { path: "/terms", changefreq: "yearly", priority: "0.3" },
         ];
 
         for (const g of games ?? []) {
+          if (!INDEXABLE_GAME_SLUGS.has(g.slug)) continue;
           entries.push({
             path: `/games/${g.slug}`,
             lastmod: g.updated_at ? new Date(g.updated_at).toISOString() : undefined,
