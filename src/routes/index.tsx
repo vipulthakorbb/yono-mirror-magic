@@ -178,7 +178,7 @@ function Index() {
             <article className="ry-card" key={g.id}>
               <Link to="/games/$slug" params={{ slug: g.slug }} className="ry-icon-box">
                 <img
-                  src={cdnImg(g.img)}
+                  src={cdnImg(g.img, 360)}
                   alt={g.title}
                   width={180}
                   height={180}
