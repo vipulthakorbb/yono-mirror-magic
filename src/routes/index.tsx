@@ -203,41 +203,30 @@ function Index() {
           <div className="ry-loader">Loading more games…</div>
         )}
 
-        {(settings?.section_title || settings?.section_content || settings?.section_image) && (
-          <section className="ry-content-area">
-            {settings.section_title && <h2>{settings.section_title}</h2>}
-            {settings.section_image && (
-              <img
-                src={settings.section_image}
-                alt={settings.section_title || "Section image"}
-                style={{
-                  maxWidth: "100%",
-                  height: "auto",
-                  borderRadius: 12,
-                  margin: "12px 0",
-                }}
-                loading="lazy"
-                decoding="async"
-              />
-            )}
-            {settings.section_content && (
-              <div dangerouslySetInnerHTML={{ __html: settings.section_content }} />
-            )}
-          </section>
-        )}
-
         <section className="ry-content-area">
-          <h2>About RoyalYono</h2>
-          <p>
-            Welcome to <strong>RoyalYono</strong> — the trusted hub for{" "}
-            <strong>Yono Rummy APK</strong>, <strong>Yono Games download</strong>,{" "}
-            <strong>Teen Patti Master</strong>, <strong>Teen Patti Gold</strong>,{" "}
-            <strong>Rummy Noble</strong>, <strong>Rummy Wealth</strong>,{" "}
-            <strong>Jili games</strong>, <strong>777 games</strong> and other{" "}
-            <strong>real cash earning apps</strong> with signup bonus. Claim your{" "}
-            <strong>51 Bonus Teen Patti</strong> rewards, read honest reviews and download
-            the official APKs from the listings above.
-          </p>
+          <h2>{settings?.section_title?.trim() || DEFAULT_HOME_SECTION_TITLE}</h2>
+          {settings?.section_image && (
+            <img
+              src={settings.section_image}
+              alt={settings.section_title || "Section image"}
+              style={{
+                maxWidth: "100%",
+                height: "auto",
+                borderRadius: 12,
+                margin: "12px 0",
+              }}
+              loading="lazy"
+              decoding="async"
+            />
+          )}
+          <div
+            dangerouslySetInnerHTML={{
+              __html:
+                settings?.section_content && settings.section_content.trim()
+                  ? settings.section_content
+                  : DEFAULT_HOME_SECTION_CONTENT,
+            }}
+          />
         </section>
       </main>
     </SiteLayout>
