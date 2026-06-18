@@ -124,7 +124,7 @@ function Index() {
         <div className="ry-hero-overlay" />
         <div className="ry-hero-content">
           <h1 className="ry-hero-title">
-            Yono Games 2026 — Yono Rummy APK Download &amp; ₹500 Bonus
+            Yono Games APK Download 2026 – Latest Yono Rummy, Slots & Teen Patti Apps
           </h1>
           <p className="ry-hero-sub">
             All Yono Rummy, Yono Slots &amp; Teen Patti APK List
@@ -133,11 +133,16 @@ function Index() {
             {GAMES.length}+ verified Yono game APKs · Real signup bonus ₹50–₹500 · Updated daily
           </p>
           <p className="ry-hero-desc">
-            <strong>RoyalYono</strong> is India's most updated hub for{" "}
-            <strong>Yono Rummy APK</strong>, <strong>Yono Slots</strong>,{" "}
-            <strong>Teen Patti</strong> and the full <strong>Yono games list 2026</strong>.
-            Every Yono APK on this page is scanned, tested, and updated weekly so you always
-            download the latest working version — no Play Store needed.
+            Welcome to Royal Yono, your trusted destination for discovering the <strong>latest Yono Games APK downloads in 2026</strong>. We bring together a wide collection of Yono Rummy, Yono Slots, Teen Patti, and other trending gaming applications in one convenient platform. Whether you are looking for newly launched apps or updated versions of popular games, our website helps you find the information you need quickly and easily.
+          </p>
+          <p className="ry-hero-desc">
+            At Royal Yono, we regularly update our listings to ensure users can access the latest working APK versions available. Our platform features more than 108 verified gaming applications, complete with app details, update information, and bonus offers. This makes it easier for users to explore different gaming options without spending time searching across multiple websites.
+          </p>
+          <p className="ry-hero-desc">
+            Our goal is to provide a simple, organized, and user-friendly experience for anyone interested in Yono gaming applications. From Yono Rummy and Teen Patti games to slot-based entertainment apps, every listing is presented with clear information to help users make informed decisions. We continuously monitor updates and add new applications to keep our collection fresh and relevant throughout the year.
+          </p>
+          <p className="ry-hero-desc">
+            Royal Yono is designed for fast browsing, easy navigation, and seamless access to the latest gaming APKs. Whether you are searching for a specific app or exploring new gaming platforms, our comprehensive directory offers a reliable source for discovering the most popular Yono Games available in 2026.
           </p>
           <form
             className="ry-hero-search"
