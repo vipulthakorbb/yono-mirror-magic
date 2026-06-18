@@ -94,7 +94,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@context": "https://schema.org",
           "@type": "WebSite",
           name: "Royal Yono",
-          url: "https://royalyono.com",
+          url: "https://www.royalyono.com",
         }),
       },
       {
@@ -103,7 +103,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "Royal Yono",
-          url: "https://royalyono.com",
+          url: "https://www.royalyono.com",
         }),
       },
     ],
