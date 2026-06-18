@@ -51,7 +51,7 @@ export const Route = createFileRoute("/")({
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://royalyono.com/" },
-      { name: "google-site-verification", content: "Qp2cU-mAdaNzqcXxSr4jImBZcdsR5CkEhWFd3o-8zH8" },
+      { name: "google-site-verification", content: "Jz93d7eFYdqiwV1iz9GMosXKl9Ob_mRE4c-bvr-yzQo" },
     ],
     links: [
       { rel: "canonical", href: "https://royalyono.com/" },
