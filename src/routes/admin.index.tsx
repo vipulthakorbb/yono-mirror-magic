@@ -114,6 +114,12 @@ function AdminGamesList() {
             Home page settings
           </Link>
           <Link
+            to="/admin/pages"
+            className="rounded-md border border-blue-600 px-4 py-2 text-sm font-semibold text-blue-600 hover:bg-blue-50"
+          >
+            Custom HTML pages
+          </Link>
+          <Link
             to="/admin/new"
             className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
           >

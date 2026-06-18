@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      custom_pages: {
+        Row: {
+          body_html: string
+          created_at: string
+          head_html: string
+          id: string
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          body_html?: string
+          created_at?: string
+          head_html?: string
+          id?: string
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          body_html?: string
+          created_at?: string
+          head_html?: string
+          id?: string
+          slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       games: {
         Row: {
           content: string
