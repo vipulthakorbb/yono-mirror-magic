@@ -22,9 +22,12 @@ import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as PSlugRouteImport } from './routes/p.$slug'
 import { Route as GamesSlugRouteImport } from './routes/games.$slug'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AdminPagesRouteImport } from './routes/admin.pages'
 import { Route as AdminNewRouteImport } from './routes/admin.new'
 import { Route as AdminIdRouteImport } from './routes/admin.$id'
 import { Route as ApiImgSplatRouteImport } from './routes/api/img.$'
+import { Route as AdminPagesNewRouteImport } from './routes/admin.pages.new'
+import { Route as AdminPagesIdRouteImport } from './routes/admin.pages.$id'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -91,6 +94,11 @@ const AdminSettingsRoute = AdminSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminPagesRoute = AdminPagesRouteImport.update({
+  id: '/pages',
+  path: '/pages',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminNewRoute = AdminNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -106,6 +114,16 @@ const ApiImgSplatRoute = ApiImgSplatRouteImport.update({
   path: '/api/img/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminPagesNewRoute = AdminPagesNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AdminPagesRoute,
+} as any)
+const AdminPagesIdRoute = AdminPagesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminPagesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -119,10 +137,13 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/admin/$id': typeof AdminIdRoute
   '/admin/new': typeof AdminNewRoute
+  '/admin/pages': typeof AdminPagesRouteWithChildren
   '/admin/settings': typeof AdminSettingsRoute
   '/games/$slug': typeof GamesSlugRoute
   '/p/$slug': typeof PSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/pages/$id': typeof AdminPagesIdRoute
+  '/admin/pages/new': typeof AdminPagesNewRoute
   '/api/img/$': typeof ApiImgSplatRoute
 }
 export interface FileRoutesByTo {
@@ -136,10 +157,13 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/admin/$id': typeof AdminIdRoute
   '/admin/new': typeof AdminNewRoute
+  '/admin/pages': typeof AdminPagesRouteWithChildren
   '/admin/settings': typeof AdminSettingsRoute
   '/games/$slug': typeof GamesSlugRoute
   '/p/$slug': typeof PSlugRoute
   '/admin': typeof AdminIndexRoute
+  '/admin/pages/$id': typeof AdminPagesIdRoute
+  '/admin/pages/new': typeof AdminPagesNewRoute
   '/api/img/$': typeof ApiImgSplatRoute
 }
 export interface FileRoutesById {
@@ -155,10 +179,13 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/admin/$id': typeof AdminIdRoute
   '/admin/new': typeof AdminNewRoute
+  '/admin/pages': typeof AdminPagesRouteWithChildren
   '/admin/settings': typeof AdminSettingsRoute
   '/games/$slug': typeof GamesSlugRoute
   '/p/$slug': typeof PSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/pages/$id': typeof AdminPagesIdRoute
+  '/admin/pages/new': typeof AdminPagesNewRoute
   '/api/img/$': typeof ApiImgSplatRoute
 }
 export interface FileRouteTypes {
@@ -175,10 +202,13 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin/$id'
     | '/admin/new'
+    | '/admin/pages'
     | '/admin/settings'
     | '/games/$slug'
     | '/p/$slug'
     | '/admin/'
+    | '/admin/pages/$id'
+    | '/admin/pages/new'
     | '/api/img/$'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -192,10 +222,13 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin/$id'
     | '/admin/new'
+    | '/admin/pages'
     | '/admin/settings'
     | '/games/$slug'
     | '/p/$slug'
     | '/admin'
+    | '/admin/pages/$id'
+    | '/admin/pages/new'
     | '/api/img/$'
   id:
     | '__root__'
@@ -210,10 +243,13 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin/$id'
     | '/admin/new'
+    | '/admin/pages'
     | '/admin/settings'
     | '/games/$slug'
     | '/p/$slug'
     | '/admin/'
+    | '/admin/pages/$id'
+    | '/admin/pages/new'
     | '/api/img/$'
   fileRoutesById: FileRoutesById
 }
@@ -325,6 +361,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSettingsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/pages': {
+      id: '/admin/pages'
+      path: '/pages'
+      fullPath: '/admin/pages'
+      preLoaderRoute: typeof AdminPagesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/new': {
       id: '/admin/new'
       path: '/new'
@@ -346,12 +389,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiImgSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/pages/new': {
+      id: '/admin/pages/new'
+      path: '/new'
+      fullPath: '/admin/pages/new'
+      preLoaderRoute: typeof AdminPagesNewRouteImport
+      parentRoute: typeof AdminPagesRoute
+    }
+    '/admin/pages/$id': {
+      id: '/admin/pages/$id'
+      path: '/$id'
+      fullPath: '/admin/pages/$id'
+      preLoaderRoute: typeof AdminPagesIdRouteImport
+      parentRoute: typeof AdminPagesRoute
+    }
   }
 }
+
+interface AdminPagesRouteChildren {
+  AdminPagesIdRoute: typeof AdminPagesIdRoute
+  AdminPagesNewRoute: typeof AdminPagesNewRoute
+}
+
+const AdminPagesRouteChildren: AdminPagesRouteChildren = {
+  AdminPagesIdRoute: AdminPagesIdRoute,
+  AdminPagesNewRoute: AdminPagesNewRoute,
+}
+
+const AdminPagesRouteWithChildren = AdminPagesRoute._addFileChildren(
+  AdminPagesRouteChildren,
+)
 
 interface AdminRouteChildren {
   AdminIdRoute: typeof AdminIdRoute
   AdminNewRoute: typeof AdminNewRoute
+  AdminPagesRoute: typeof AdminPagesRouteWithChildren
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
@@ -359,6 +431,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminIdRoute: AdminIdRoute,
   AdminNewRoute: AdminNewRoute,
+  AdminPagesRoute: AdminPagesRouteWithChildren,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
