@@ -16,7 +16,7 @@ export const Route = createFileRoute("/contact")({
         property: "og:description",
         content: "Reach out to RoyalYono — we usually reply within 24 hours.",
       },
-      { property: "og:url", content: "https://royalyono.com/contact" },
+      { property: "og:url", content: "https://www.royalyono.com/contact" },
     ],
     links: [],
   }),
