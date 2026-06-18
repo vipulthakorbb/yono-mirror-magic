@@ -72,9 +72,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "RoyalYono — All Yono Games, Rummy & Casino Apps" },
+      { title: "Royal Yono — All Yono Games, Rummy & Casino Apps" },
       { name: "description", content: "Your hub for the latest Yono Rummy apps, Jili games, Teen Patti bonuses and honest casino game reviews — claim signup bonuses and download official APKs." },
-      { property: "og:site_name", content: "RoyalYono" },
+      { property: "og:site_name", content: "Royal Yono" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "google-site-verification", content: "Qp2cU-mAdaNzqcXxSr4jImBZcdsR5CkEhWFd3o-8zH8" },
@@ -93,7 +93,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "WebSite",
-          name: "RoyalYono",
+          name: "Royal Yono",
           url: "https://royalyono.com",
         }),
       },
@@ -102,7 +102,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Organization",
-          name: "RoyalYono",
+          name: "Royal Yono",
           url: "https://royalyono.com",
         }),
       },
@@ -119,6 +119,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        <meta name="google-site-verification" content="Jz93d7eFYdqiwV1iz9GMosXKl9Ob_mRE4c-bvr-yzQo" />
       </head>
       <body>
         {children}
