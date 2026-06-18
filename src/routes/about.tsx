@@ -17,7 +17,7 @@ export const Route = createFileRoute("/about")({
         content:
           "Learn what RoyalYono is and why thousands trust us for the latest Yono, rummy and casino app reviews.",
       },
-      { property: "og:url", content: "https://royalyono.com/about" },
+      { property: "og:url", content: "https://www.royalyono.com/about" },
     ],
     links: [],
   }),
