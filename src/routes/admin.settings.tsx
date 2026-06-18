@@ -4,6 +4,10 @@ import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { adminGetSiteSettings, adminUpdateSiteSettings } from "@/lib/admin.functions";
+import {
+  DEFAULT_HOME_SECTION_TITLE,
+  DEFAULT_HOME_SECTION_CONTENT,
+} from "@/lib/home-defaults";
 
 export const Route = createFileRoute("/admin/settings")({
   component: AdminSettings,
@@ -38,8 +42,12 @@ function AdminSettings() {
     setMetaTitle(data.meta_title ?? "");
     setMetaDescription(data.meta_description ?? "");
     setMetaKeywords(data.meta_keywords ?? "");
-    setSectionTitle(data.section_title ?? "");
-    setSectionContent(data.section_content ?? "");
+    setSectionTitle(data.section_title ?? DEFAULT_HOME_SECTION_TITLE);
+    setSectionContent(
+      data.section_content && data.section_content.trim()
+        ? data.section_content
+        : DEFAULT_HOME_SECTION_CONTENT,
+    );
     setSectionImage(data.section_image ?? "");
   }, [data]);
 

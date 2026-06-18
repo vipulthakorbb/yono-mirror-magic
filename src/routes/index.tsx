@@ -2,6 +2,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { SiteLayout } from "@/components/SiteLayout";
 import { listGames, getSiteSettings } from "@/lib/games.functions";
+import {
+  DEFAULT_HOME_SECTION_TITLE,
+  DEFAULT_HOME_SECTION_CONTENT,
+} from "@/lib/home-defaults";
 import { cdnImg } from "@/lib/cdn";
 import { useEffect, useState } from "react";
 import bannerWave from "@/assets/banner-wave.webp.asset.json";
