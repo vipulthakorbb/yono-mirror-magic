@@ -9,7 +9,7 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "About RoyalYono — your trusted guide to Yono Rummy, Yono apps, Jili games, Teen Patti bonuses and honest casino game reviews.",
+          "About RoyalYono vansh — your trusted guide to Yono Rummy, Yono apps, Jili games, Teen Patti bonuses and honest casino game reviews.",
       },
       { property: "og:title", content: "About Us — RoyalYono" },
       {
